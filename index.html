@@ -11,6 +11,7 @@
                 <h2>Navigation</h2>
                 <ul>
                     <li><a href="#introduction">Introduction</a></li>
+                    <li><a href="#howitworks">How it Works</a></li>
                     <li><a href="#commands">Workflow Commands</a></li>
                     <li><a href="#ai">Generative AI Commands</a></li>
                     <li><a href="#contact">Contact</a></li>
@@ -47,6 +48,20 @@
                                 command.
                             </p>
                         </section>
+                        <section id="howitworks">
+                            <h2>How it Works</h2>
+                            <p>
+                                This bot is a serverless, Slack-integrated, AI-backed assistant which uses custom API calls to and from Google sheets so we can localize our editing workflow. It's able to access and manage all information on the reponse Google Sheet, as well as generate summaries and timelines for writers' proposals. 
+                            </p>
+                            <p>
+                                It operates primarily through slash commands, which are listed below, and returns responses to the user privately.
+                                Generative AI commands, however, are published to the channel for the benefit of all editors. When a command is invoked, for example, <code>/brief-me [writer]</code>, the bot will look through all recorded responses for the latest proposal from the specified writer and generate a brief summary for that proposal.
+                            </p>
+                            <p>
+                                Currently, this bot is in it's beta phase, and is only available to the FULR editing team. Future goals include expanding the bot's capabilities to include more AI-driven features, such as generating legal briefs and case law summaries, and integrating with other channels or even other law reviews. 
+                            </p>
+                        </section>
+
                         <section id="commands">
                             <h2>Workflow Commands</h2>
                             <div class="commands-list">
@@ -135,7 +150,7 @@
                             <h2>Contact</h2>
                             <p>
                                 If you have any questions or need further
-                                assistance, feel free to reach out:
+                                assistance, or if you are looking for the source code, please reach out to:
                             </p>
                             <p>
                                 Email:
@@ -149,7 +164,20 @@
                                 >
                             </p>
                             <p>
-                                Website:
+                                GitHub:
+                                <a
+                                    href="
+                                    https://github.com/jeffreydrew/
+                                    "
+                                    style="
+                                        color: rgb(93, 177, 226);
+                                        font-weight: bold;
+                                    "
+                                    >@jeffreydrew</a
+                                >
+                            </p>
+                            <p>
+                                FULR Website:
                                 <a
                                     href="https://fulr.org/"
                                     style="
@@ -177,209 +205,213 @@
 
 <style>
     * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-body {
-  font-family: 'Arial', sans-serif;
-  line-height: 1.6;
-  background: linear-gradient(135deg, #2C3333 0%, #395B64 100%);
-  color: #E7F6F2;
-}
+    body {
+        font-family: "Arial", sans-serif;
+        line-height: 1.6;
+        background: linear-gradient(135deg, #2c3333 0%, #395b64 100%);
+        color: #e7f6f2;
+    }
 
-.wrapper {
-  display: flex;
-  min-height: 100vh;
-}
+    .wrapper {
+        display: flex;
+        min-height: 100vh;
+    }
 
-.navbar {
-  width: 220px;
-  background: rgba(44, 51, 51, 0.95);
-  padding: 20px;
-  margin: 20px;
-  border-radius: 10px;
-  position: fixed;
-  top: 20px;
-  bottom: auto;
-  overflow-y: auto;
-}
+    .navbar {
+        width: 220px;
+        background: rgba(44, 51, 51, 0.95);
+        padding: 20px;
+        margin: 20px;
+        border-radius: 10px;
+        position: fixed;
+        top: 20px;
+        bottom: auto;
+        overflow-y: auto;
+    }
 
-.navbar h2 {
-  color: #E7F6F2;
-  margin-bottom: 20px;
-  text-align: center;
-}
+    .navbar h2 {
+        color: #e7f6f2;
+        margin-bottom: 20px;
+        text-align: center;
+    }
 
-.navbar ul {
-  list-style: none;
-}
+    .navbar ul {
+        list-style: none;
+    }
 
-.navbar ul li {
-  margin: 15px 0;
-}
+    .navbar ul li {
+        margin: 15px 0;
+    }
 
-.navbar ul li a {
-  color: #A5C9CA;
-  text-decoration: none;
-  font-size: 1.1rem;
-  display: block;
-  padding: 10px;
-  border-radius: 5px;
-  transition: background 0.3s, color 0.3s;
-}
+    .navbar ul li a {
+        color: #a5c9ca;
+        text-decoration: none;
+        font-size: 1.1rem;
+        display: block;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background 0.3s, color 0.3s;
+    }
 
-.navbar ul li a:hover {
-  background: rgba(165, 201, 202, 0.1);
-  color: #E7F6F2;
-}
+    .navbar ul li a:hover {
+        background: rgba(165, 201, 202, 0.1);
+        color: #e7f6f2;
+    }
 
-.content {
-  margin-left: 260px;
-  padding: 20px;
-  width: calc(100% - 260px);
-}
+    .content {
+        margin-left: 260px;
+        padding: 20px;
+        width: calc(100% - 260px);
+    }
 
-header {
-  background: rgba(57, 91, 100, 0.85);
-  color: #E7F6F2;
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  text-align: center;
-}
+    header {
+        background: rgba(57, 91, 100, 0.85);
+        color: #e7f6f2;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
 
-header h1 {
-  margin-bottom: 10px;
-}
+    header h1 {
+        margin-bottom: 10px;
+    }
 
-header p {
-  font-size: 1.2rem;
-}
+    header p {
+        font-size: 1.2rem;
+    }
 
-main {
-  padding: 20px 0;
-}
+    main {
+        padding: 20px 0;
+    }
 
-h2 {
-  margin-top: 20px;
-  color: #A5C9CA;
-  border-bottom: 2px solid #A5C9CA;
-  padding-bottom: 5px;
-}
+    h2 {
+        margin-top: 20px;
+        color: #a5c9ca;
+        border-bottom: 2px solid #a5c9ca;
+        padding-bottom: 5px;
+    }
 
-.commands-list .command {
-  background: rgba(57, 91, 100, 0.85);
-  padding: 15px;
-  margin: 15px 0;
-  border-radius: 10px;
-  position: relative;
-  transition: background 0.3s;
-}
+    .commands-list .command {
+        background: rgba(57, 91, 100, 0.85);
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 10px;
+        position: relative;
+        transition: background 0.3s;
+    }
 
-.commands-list .command:hover {
-  background: rgba(57, 91, 100, 0.95);
-}
+    .commands-list .command:hover {
+        background: rgba(57, 91, 100, 0.95);
+    }
 
-.commands-list .command code {
-  display: block;
-  background: rgba(44, 51, 51, 0.95);
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  color: #E7F6F2;
-  font-size: 1.1rem;
-  position: relative;
-}
+    .commands-list .command code {
+        display: block;
+        background: rgba(44, 51, 51, 0.95);
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        color: #e7f6f2;
+        font-size: 1.1rem;
+        position: relative;
+    }
 
-.commands-list .command p {
-  margin: 0;
-}
+    .commands-list .command p {
+        margin: 0;
+    }
 
-.copy-button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: #A5C9CA;
-  color: #2C3333;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s, color 0.3s;
-}
+    .copy-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #a5c9ca;
+        color: #2c3333;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s, color 0.3s;
+    }
 
-.copy-button:hover {
-  background: #E7F6F2;
-  color: #2C3333;
-}
+    .copy-button:hover {
+        background: #e7f6f2;
+        color: #2c3333;
+    }
 
-footer {
-  background: rgba(44, 51, 51, 0.95);
-  color: #E7F6F2;
-  text-align: center;
-  padding: 10px 0;
-  margin-top: 20px;
-  border-radius: 10px;
-}
+    footer {
+        background: rgba(44, 51, 51, 0.95);
+        color: #e7f6f2;
+        text-align: center;
+        padding: 10px 0;
+        margin-top: 20px;
+        border-radius: 10px;
+    }
 
-footer p {
-  margin: 0;
-}
+    footer p {
+        margin: 0;
+    }
 
-@media (max-width: 768px) {
-  .wrapper {
-    flex-direction: column;
-  }
-  
-  .navbar {
-    width: 100%;
-    position: relative;
-    height: auto;
-    margin: 10px 0;
-  }
-  
-  .content {
-    margin-left: 0;
-    width: 100%;
-  }
-}
+    @media (max-width: 768px) {
+        .wrapper {
+            flex-direction: column;
+        }
 
+        .navbar {
+            width: 100%;
+            position: relative;
+            height: auto;
+            margin: 10px 0;
+        }
+
+        .content {
+            margin-left: 0;
+            width: 100%;
+        }
+    }
 </style>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Smooth scroll for navigation links
-  document.querySelectorAll('.navbar ul li a').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-      e.preventDefault();
+    document.addEventListener("DOMContentLoaded", function () {
+        // Smooth scroll for navigation links
+        document.querySelectorAll(".navbar ul li a").forEach((anchor) => {
+            anchor.addEventListener("click", function (e) {
+                e.preventDefault();
 
-      document.querySelector(this.getAttribute('href')).scrollIntoView({
-        behavior: 'smooth'
-      });
+                document
+                    .querySelector(this.getAttribute("href"))
+                    .scrollIntoView({
+                        behavior: "smooth",
+                    });
+            });
+        });
+
+        // Copy to clipboard functionality
+        document.querySelectorAll(".copy-button").forEach((button) => {
+            button.addEventListener("click", function () {
+                var codeBlock = this.previousElementSibling;
+                var textToCopy = codeBlock.innerText;
+
+                navigator.clipboard
+                    .writeText(textToCopy)
+                    .then(() => {
+                        this.textContent = "Copied!";
+                        this.style.backgroundColor = "#E7F6F2";
+                        this.style.color = "#2C3333";
+
+                        setTimeout(() => {
+                            this.textContent = "Copy";
+                            this.style.backgroundColor = "#A5C9CA";
+                            this.style.color = "#2C3333";
+                        }, 2000);
+                    })
+                    .catch((err) => {
+                        console.error("Could not copy text: ", err);
+                    });
+            });
+        });
     });
-  });
-
-  // Copy to clipboard functionality
-  document.querySelectorAll('.copy-button').forEach(button => {
-    button.addEventListener('click', function() {
-      var codeBlock = this.previousElementSibling;
-      var textToCopy = codeBlock.innerText;
-
-      navigator.clipboard.writeText(textToCopy).then(() => {
-        this.textContent = 'Copied!';
-        this.style.backgroundColor = '#E7F6F2';
-        this.style.color = '#2C3333';
-
-        setTimeout(() => {
-          this.textContent = 'Copy';
-          this.style.backgroundColor = '#A5C9CA';
-          this.style.color = '#2C3333';
-        }, 2000);
-      }).catch(err => {
-        console.error('Could not copy text: ', err);
-      });
-    });
-  });
-});
 </script>
