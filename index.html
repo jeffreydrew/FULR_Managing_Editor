@@ -1,150 +1,385 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentation</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <div class="container">
-            <h1>Documentation</h1>
-            <nav>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>FULR Slack Bot Documentation</title>
+    </head>
+    <body>
+        <div class="wrapper">
+            <nav class="navbar">
+                <h2>Navigation</h2>
                 <ul>
-                    <li><a href="#commands">Commands</a></li>
-                    <li><a href="#usage">Usage</a></li>
-                    <li><a href="#examples">Examples</a></li>
+                    <li><a href="#introduction">Introduction</a></li>
+                    <li><a href="#commands">Workflow Commands</a></li>
+                    <li><a href="#ai">Generative AI Commands</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
+            <div class="content">
+                <header>
+                    <div class="container">
+                        <h1>FULR Managing Editor Slack Bot Documentation</h1>
+                        <p>
+                            Welcome to the comprehensive documentation for the
+                            FULR Managing Editor Slack Bot. This bot assists
+                            editors and writers with various tasks directly
+                            within Slack.
+                        </p>
+                    </div>
+                </header>
+                <main>
+                    <div class="container">
+                        <section id="introduction">
+                            <h2>Introduction</h2>
+                            <p>
+                                The FULR Managing Editor Slack Bot is designed
+                                to streamline the workflow for editors' tasks.
+                                From assigning editors to writers to summarizing
+                                proposals, this bot leverages Google Sheets and
+                                GPT4 to automate and facilitate various
+                                editorial tasks.
+                            </p>
+                            <p>
+                                A note on use: names must be typed exactly as in
+                                the form, and use of semi-colons must be
+                                observed when passing multiple arguments into a
+                                command.
+                            </p>
+                        </section>
+                        <section id="commands">
+                            <h2>Workflow Commands</h2>
+                            <div class="commands-list">
+                                <div class="command">
+                                    <code>/add-editor [writer: editor]</code>
+                                    <button class="copy-button">Copy</button>
+                                    <p>Assign an editor to a writer.</p>
+                                </div>
+                                <div class="command">
+                                    <code>/writers-for [editor]</code>
+                                    <button class="copy-button">Copy</button>
+                                    <p>
+                                        List all writers assigned to a specific
+                                        editor.
+                                    </p>
+                                </div>
+                                <div class="command">
+                                    <code>/editor-for [writer]</code>
+                                    <button class="copy-button">Copy</button>
+
+                                    <p>
+                                        Get the editor assigned to a specific
+                                        writer.
+                                    </p>
+                                </div>
+                                <div class="command">
+                                    <code
+                                        >/add-completion-date [name: date]</code
+                                    >
+                                    <button class="copy-button">Copy</button>
+
+                                    <p>Add a completion date for a writer.</p>
+                                </div>
+                                <div class="command">
+                                    <code>/meet [name: date]</code>
+                                    <button class="copy-button">Copy</button>
+
+                                    <p>Send a meeting request to a user.</p>
+                                </div>
+                                <div class="command">
+                                    <code>/need-checkin</code>
+                                    <button class="copy-button">Copy</button>
+
+                                    <p>List users needing check-in.</p>
+                                </div>
+                                <div class="command">
+                                    <code>/help</code>
+                                    <button class="copy-button">Copy</button>
+
+                                    <p>List all available commands.</p>
+                                </div>
+                            </div>
+                        </section>
+                        <section id="ai">
+                            <h2>Generative AI Commands</h2>
+                            <p>
+                                These commands only require the name of a
+                                writer, and will automatically find their latest
+                                proposal and process it with GPT4.
+                            </p>
+                            <div class="commands-list">
+                                <div class="command">
+                                    <code>/brief-me [writer]</code>
+                                    <button class="copy-button">Copy</button>
+
+                                    <p>
+                                        Get a brief summary of the latest
+                                        proposal for a writer.
+                                    </p>
+                                </div>
+                                <div class="command">
+                                    <code>/guide [writer]</code>
+                                    <button class="copy-button">Copy</button>
+
+                                    <p>Create a timeline for a paper.</p>
+                                </div>
+                                <div class="command">
+                                    <code>/caselaw [writer]</code>
+                                    <button class="copy-button">Copy</button>
+
+                                    <p>Provide links to legal resources.</p>
+                                </div>
+                            </div>
+                        </section>
+                        <section id="contact">
+                            <h2>Contact</h2>
+                            <p>
+                                If you have any questions or need further
+                                assistance, feel free to reach out:
+                            </p>
+                            <p>
+                                Email:
+                                <a
+                                    href="mailto:support@fulr.com"
+                                    style="
+                                        color: rgb(93, 177, 226);
+                                        font-weight: bold;
+                                    "
+                                    >jeffreydrew@ufl.edu</a
+                                >
+                            </p>
+                            <p>
+                                Website:
+                                <a
+                                    href="https://fulr.org/"
+                                    style="
+                                        color: rgb(93, 177, 226);
+                                        font-weight: bold;
+                                    "
+                                    >https://fulr.org/</a
+                                >
+                            </p>
+                        </section>
+                    </div>
+                </main>
+                <footer>
+                    <div class="container">
+                        <p>
+                            &copy; 2024 Florida Undergraduate Law Review. All
+                            rights reserved.
+                        </p>
+                    </div>
+                </footer>
+            </div>
         </div>
-    </header>
-    <main>
-        <div class="container">
-            <section id="commands">
-                <h2>Commands</h2>
-                <ul>
-                    <li><code>/add-editor name: editor</code> - Assign an editor to a writer.</li>
-                    <li><code>/writers-for editor</code> - List all writers assigned to a specific editor.</li>
-                    <li><code>/meet username date</code> - Send a meeting request to a user.</li>
-                    <li><code>/brief-me writer</code> - Get a brief summary of the latest proposal for a writer.</li>
-                    <li><code>/get-editor writer</code> - Get the editor assigned to a specific writer.</li>
-                    <li><code>/help</code> - List all available commands.</li>
-                </ul>
-            </section>
-            <section id="usage">
-                <h2>Usage</h2>
-                <p>To use the commands, simply type the command in your Slack chat followed by the required parameters.</p>
-            </section>
-            <section id="examples">
-                <h2>Examples</h2>
-                <p>Here are some examples of how to use the commands:</p>
-                <ul>
-                    <li><code>/add-editor John Doe: Jane Smith</code></li>
-                    <li><code>/writers-for Jane Smith</code></li>
-                    <li><code>/meet @johndoe 2023-12-25</code></li>
-                    <li><code>/brief-me John Doe</code></li>
-                    <li><code>/get-editor John Doe</code></li>
-                </ul>
-            </section>
-            <section id="contact">
-                <h2>Contact</h2>
-                <p>If you have any questions or need further assistance, please contact our support team.</p>
-            </section>
-        </div>
-    </main>
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 Your Company. All rights reserved.</p>
-        </div>
-    </footer>
-</body>
+    </body>
 </html>
+
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background: #f4f4f4;
-    color: #333;
+    * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  background: linear-gradient(135deg, #2C3333 0%, #395B64 100%);
+  color: #E7F6F2;
+}
+
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.navbar {
+  width: 220px;
+  background: rgba(44, 51, 51, 0.95);
+  padding: 20px;
+  margin: 20px;
+  border-radius: 10px;
+  position: fixed;
+  top: 20px;
+  bottom: auto;
+  overflow-y: auto;
+}
+
+.navbar h2 {
+  color: #E7F6F2;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.navbar ul {
+  list-style: none;
+}
+
+.navbar ul li {
+  margin: 15px 0;
+}
+
+.navbar ul li a {
+  color: #A5C9CA;
+  text-decoration: none;
+  font-size: 1.1rem;
+  display: block;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.navbar ul li a:hover {
+  background: rgba(165, 201, 202, 0.1);
+  color: #E7F6F2;
+}
+
+.content {
+  margin-left: 260px;
+  padding: 20px;
+  width: calc(100% - 260px);
 }
 
 header {
-    background: #333;
-    color: #fff;
-    padding: 1rem 0;
+  background: rgba(57, 91, 100, 0.85);
+  color: #E7F6F2;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 header h1 {
-    margin: 0;
+  margin-bottom: 10px;
 }
 
-.container {
-    width: 80%;
-    margin: auto;
-    overflow: hidden;
-}
-
-nav ul {
-    padding: 0;
-    list-style: none;
-    text-align: center;
-}
-
-nav ul li {
-    display: inline;
-    margin: 0 0.5rem;
-}
-
-nav ul li a {
-    color: #fff;
-    text-decoration: none;
+header p {
+  font-size: 1.2rem;
 }
 
 main {
-    padding: 2rem 0;
-}
-
-section {
-    margin-bottom: 2rem;
+  padding: 20px 0;
 }
 
 h2 {
-    border-bottom: 2px solid #333;
-    padding-bottom: 0.5rem;
+  margin-top: 20px;
+  color: #A5C9CA;
+  border-bottom: 2px solid #A5C9CA;
+  padding-bottom: 5px;
 }
 
-ul {
-    list-style: none;
-    padding: 0;
+.commands-list .command {
+  background: rgba(57, 91, 100, 0.85);
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 10px;
+  position: relative;
+  transition: background 0.3s;
 }
 
-ul li {
-    background: #fff;
-    margin: 0.5rem 0;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+.commands-list .command:hover {
+  background: rgba(57, 91, 100, 0.95);
 }
 
-code {
-    background: #eee;
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
+.commands-list .command code {
+  display: block;
+  background: rgba(44, 51, 51, 0.95);
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  color: #E7F6F2;
+  font-size: 1.1rem;
+  position: relative;
+}
+
+.commands-list .command p {
+  margin: 0;
+}
+
+.copy-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #A5C9CA;
+  color: #2C3333;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+.copy-button:hover {
+  background: #E7F6F2;
+  color: #2C3333;
 }
 
 footer {
-    background: #333;
-    color: #fff;
-    text-align: center;
-    padding: 1rem 0;
-    margin-top: 2rem;
+  background: rgba(44, 51, 51, 0.95);
+  color: #E7F6F2;
+  text-align: center;
+  padding: 10px 0;
+  margin-top: 20px;
+  border-radius: 10px;
 }
 
 footer p {
-    margin: 0;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column;
+  }
+  
+  .navbar {
+    width: 100%;
+    position: relative;
+    height: auto;
+    margin: 10px 0;
+  }
+  
+  .content {
+    margin-left: 0;
+    width: 100%;
+  }
 }
 
 </style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Smooth scroll for navigation links
+  document.querySelectorAll('.navbar ul li a').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      document.querySelector(this.getAttribute('href')).scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+  });
+
+  // Copy to clipboard functionality
+  document.querySelectorAll('.copy-button').forEach(button => {
+    button.addEventListener('click', function() {
+      var codeBlock = this.previousElementSibling;
+      var textToCopy = codeBlock.innerText;
+
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        this.textContent = 'Copied!';
+        this.style.backgroundColor = '#E7F6F2';
+        this.style.color = '#2C3333';
+
+        setTimeout(() => {
+          this.textContent = 'Copy';
+          this.style.backgroundColor = '#A5C9CA';
+          this.style.color = '#2C3333';
+        }, 2000);
+      }).catch(err => {
+        console.error('Could not copy text: ', err);
+      });
+    });
+  });
+});
+</script>

@@ -1,4 +1,6 @@
-PropertiesService.getScriptProperties().setProperty('EDEN_API_KEY', '[YOUR_EDEN_API_KEY');
+PropertiesService.getScriptProperties().setProperty('EDEN_API_KEY', 'YOUR_EDEN_API_KEY');
+
+PropertiesService.getScriptProperties().setProperty('SLACK_BOT_TOKEN', 'SLACK_BOT_TOKEN');
 
 function doPost(e) {
   var responseUrl;
@@ -6,59 +8,148 @@ function doPost(e) {
     // Log the raw POST data
     Logger.log("Raw POST data: " + e.postData.contents);
 
-    // Parse the URL-encoded POST data
-    var params = e.parameter;
+    var payload;
+
+    // Determine if the incoming request is JSON or URL-encoded form data
+    try {
+      payload = JSON.parse(e.postData.contents);
+    } catch (error) {
+      payload = e.parameter;
+    }
 
     // Handle Slack URL verification challenge
-    if (params.type === "url_verification") {
-      return ContentService.createTextOutput(params.challenge);
+    if (payload.type === "url_verification") {
+      return ContentService.createTextOutput(payload.challenge);
     }
 
-    // Extract the necessary parameters
-    var command = params.command;  // The slash command
-    var text = params.text;  // The text content of the slash command
-    responseUrl = params.response_url;  // The response URL to reply to the command
-    
-    // Log the extracted parameters
-    Logger.log("Command: " + command);
-    Logger.log("Text: " + text);
+    // Handle event callbacks
+    if (payload.type === "event_callback") {
+      var event = payload.event;
 
-    // Acknowledge the command immediately to prevent timeout
-    UrlFetchApp.fetch(responseUrl, {
-      method: 'post',
-      contentType: 'application/json',
-      payload: JSON.stringify({ text: 'Processing your request...' })
-    });
-
-    // Handle the command
-    if (command === "/add-editor") {
-      handleAddEditorCommand(text, responseUrl);
-    } else if (command === "/writers-for") {
-      handleGetWritersCommand(text, responseUrl);
-    } else if (command === "/meet") {
-      handleMeetCommand(text, responseUrl);
-    } else if (command === "/brief-me") {
-      handleBriefMeCommand(text, responseUrl);
-    } else if (command === "/guide") {
-      handleGuideCommand(text, responseUrl);
-    } else if (command === "/caselaw") {
-      handleCaselawCommand(text, responseUrl);
-    } else if (command === "/editor-for") {
-      handleGetEditorForWriterCommand(text, responseUrl);
-    } else if (command === "/need-checkin") {
-      handleGetUsersWhoNeedCheckinsCommand(text, responseUrl);
-    } else if (command === "/add-completion-date") {
-      handleAddCompletionDateCommand(text, responseUrl);
-    } else {
-      throw new Error("Unknown command: " + command);
+      // Check the event type
+      if (event.type === "app_mention") {
+        // handleAppMention(event);
+        return ContentService.createTextOutput("OK");
+      }
     }
+
+    // Handle slash commands
+    if (payload.command) {
+      var command = payload.command;
+      var text = payload.text;
+      responseUrl = payload.response_url;
+      var userId = payload.user_id;
+      var invokingUserName = getUserFullName(userId);
+      var invokingUser = invokingUserName.split(' ')[0]; // Extract the first name
+
+
+
+      // Log the extracted parameters
+      Logger.log("Command: " + command);
+      Logger.log("Text: " + text);
+
+      // Acknowledge the command immediately to prevent timeout
+      UrlFetchApp.fetch(responseUrl, {
+        method: 'post',
+        contentType: 'application/json',
+        payload: JSON.stringify({ text: 'Processing your request...' })
+      });
+
+      // Handle the command using a switch statement
+      switch (command) {
+        case "/add-editor":
+          handleAddEditorCommand(text, responseUrl);
+          break;
+        case "/writers-for":
+          handleGetWritersCommand(text, responseUrl);
+          break;
+        case "/editor-for":
+          handleGetEditorForWriterCommand(text, responseUrl);
+          break;
+        case "/add-completion-date":
+          handleAddCompletionDateCommand(text, responseUrl);
+          break;
+        case "/meet":
+          handleMeetCommand(text, responseUrl, invokingUser);
+          break;
+        case "/need-checkin":
+          handleNeedCheckinCommand(responseUrl);
+          break;
+        case "/brief-me":
+          handleBriefMeCommand(text, responseUrl, payload, invokingUser);
+          break;
+        case "/guide":
+          handleGuideCommand(text, responseUrl, payload, invokingUser);
+          break;
+        case "/caselaw":
+          handleCaselawCommand(text, responseUrl, payload, invokingUser);
+          break;
+        case "/help":
+          handleHelpCommand(responseUrl);
+          break;
+        default:
+          throw new Error("Unknown command: " + command);
+      }
+      return ContentService.createTextOutput("");
+    }
+
+    // If none of the above, return an error
+    return ContentService.createTextOutput("No valid command or event type found.");
   } catch (error) {
     Logger.log("Error: " + error.message);
     if (responseUrl) {
       postToSlack(responseUrl, "Error: " + error.message);
     }
+    return ContentService.createTextOutput("Error: " + error.message);
   }
-  return ContentService.createTextOutput("OK");
+}
+
+function handleAppMention(event) {
+  try {
+    // Extract the user and channel from the event
+    var user = event.user;
+    var channel = event.channel;
+    var text = event.text;
+
+    // Remove the bot mention part from the text
+    var mention = `<@${event.bot_id || event.user}>`;
+    var messageText = text.replace(mention, '').trim();
+
+
+    var message = getSummaryFromEdenAI(messageText, "chat");
+
+    // Post the message to Slack
+    postMessageToChannel(channel, message);
+  } catch (error) {
+    Logger.log("Error in handleAppMention: " + error.message);
+  }
+}
+
+
+function handleHelpCommand(responseUrl) {
+  try {
+    var helpMessage = 
+      `Available Commands:
+      1. /add-editor name: editor - Assign an editor to a writer.
+      2. /writers-for editor - List all writers assigned to a specific editor.
+      3. /editor-for writer - Get the editor assigned to a specific writer.
+      4. /add-completion-date name date - Add a completion date for a writer.
+      5. /meet username date - Send a meeting request to a user.
+      6. /need-checkin - List users needing check-in.
+      7. /brief-me writer - Get a brief summary of the latest proposal for a writer.
+      8. /guide prompt - Create a timeline for a paper.
+      9. /caselaw prompt - Provide links to legal resources.
+      10. /help - List all available commands.
+      Full Documentation available at: 
+      https://jeffreydrew.github.io/FULR_Managing_Editor/
+      `;
+
+    // Respond with the help message
+    postToSlack(responseUrl, helpMessage);
+  } catch (error) {
+    Logger.log("Error in handleHelpCommand: " + error.message);
+    postToSlack(responseUrl, "Error: " + error.message);
+  }
 }
 
 function handleAddEditorCommand(text, responseUrl) {
@@ -112,7 +203,6 @@ function handleAddEditorCommand(text, responseUrl) {
   }
 }
 
-
 function handleGetWritersCommand(editorName, responseUrl) {
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -150,7 +240,7 @@ function handleGetWritersCommand(editorName, responseUrl) {
   }
 }
 
-function handleGetEditorForWriterCommand(writerName) {
+function handleGetEditorForWriterCommand(writerName, responseUrl) {
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getSheetByName('Sheet1');
@@ -177,7 +267,7 @@ function handleGetEditorForWriterCommand(writerName) {
       throw new Error("No editor found for writer '" + writerName + "'.");
     }
 
-    return editorName;
+    postToSlack(responseUrl,`Editor for ${writerName}: ${editorName}`);
   } catch (error) {
     Logger.log("Error in getEditorForWriter: " + error.message);
     throw new Error("Failed to get editor for writer: " + error.message);
@@ -235,7 +325,40 @@ function handleAddCompletionDateCommand(text, responseUrl) {
   }
 }
 
-function handleGetUsersWhoNeedCheckinsCommand() {
+function handleMeetCommand(text, responseUrl, invokingUser) {
+  try {
+    // Parse the message for the format "username: date"
+    var nameDateParts = text.split(':');
+    if (nameDateParts.length < 2) {
+      throw new Error("Invalid message format. Expected format: 'username: date'");
+    }
+
+    var username = nameDateParts[0].trim();
+    var date = nameDateParts.slice(1).join(' ').trim();
+
+    // Log the parsed username and date
+    Logger.log("Username: " + username);
+    Logger.log("Date: " + date);
+
+    // Extract the first name of the recipient
+    var recipientFirstName = username.split(' ')[0];
+
+    // Send a private message to the specified username
+    var message = `Hi ${recipientFirstName}, I'm ${invokingUser}, an editor with FULR, and I'm super excited to be working with you this semester! Would you be free to meet on ${date} to write out a rough outline for your piece?`;
+    sendPrivateMessage(username, message);
+
+    // Respond in the same Slack channel
+    postToSlack(responseUrl, `Meeting request sent to ${username} for ${date}`);
+
+    return ContentService.createTextOutput("Meeting request sent");
+  } catch (error) {
+    Logger.log("Error in handleMeetCommand: " + error.message);
+    postToSlack(responseUrl, "Error: " + error.message);
+    return ContentService.createTextOutput("Error: " + error.message);
+  }
+}
+
+function handleNeedCheckinCommand(responseUrl) {
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getSheetByName('Sheet1');
@@ -263,66 +386,31 @@ function handleGetUsersWhoNeedCheckinsCommand() {
       var checkinDate = new Date(values[i][lastCheckinColumnIndex]);
       if (checkinDate < twoWeeksAgo) {
         usersWithOldCheckins.push({
-          name: values[i][0], // Assuming the first column is the user name
-          checkinDate: checkinDate
+          name: values[i][1], // Assuming the first column is the user name
+          date: checkinDate.toDateString()
         });
       }
     }
 
     // Sort the users by check-in date from oldest to most recent
     usersWithOldCheckins.sort(function(a, b) {
-      return a.checkinDate - b.checkinDate;
+      return new Date(a.date) - new Date(b.date);
     });
 
     // Create a formatted list of users
-    var userList = usersWithOldCheckins.map(function(user) {
-      return user.name + " (Last Check-in: " + user.checkinDate.toDateString() + ")";
-    });
+    var userListString = usersWithOldCheckins.map(function(user) {
+      return `${user.name}: ${user.date}`;
+    }).join("\n");
 
-    // Join the list into a single string
-    var userListString = userList.join("\n");
-
-    return userListString;
+    // Post the list to Slack
+    postToSlack(responseUrl, `Users needing check-in:\n${userListString}`);
   } catch (error) {
-    Logger.log("Error in getUsersWithOldCheckins: " + error.message);
-    throw new Error("Failed to get users with old check-ins: " + error.message);
-  }
-}
-
-function handleMeetCommand(text, responseUrl) {
-  try {
-    // Parse the message for the format "username date"
-    var nameDateParts = text.split(' ');
-    if (nameDateParts.length < 2) {
-      throw new Error("Invalid message format. Expected format: 'username date'");
-    }
-
-    var username = nameDateParts[0].trim();
-    var date = nameDateParts.slice(1).join(' ').trim();
-
-    // Log the parsed username and date
-    Logger.log("Username: " + username);
-    Logger.log("Date: " + date);
-
-    // Send a private message to the specified username
-    var message = `Hi, I'm an editor with FULR, and I'm super excited to be working with you this semester! Would you be free to meet on ${date} to write out a rough outline for your piece?`;
-    sendPrivateMessage(username, message);
-
-    // Respond in the same Slack channel
-    postToSlack(responseUrl, `Meeting request sent to ${username} for ${date}`);
-
-    return ContentService.createTextOutput("Meeting request sent");
-  } catch (error) {
-    Logger.log("Error in handleMeetCommand: " + error.message);
+    Logger.log("Error in handleNeedCheckinCommand: " + error.message);
     postToSlack(responseUrl, "Error: " + error.message);
-    return ContentService.createTextOutput("Error: " + error.message);
   }
 }
 
-
-
-
-function handleBriefMeCommand(writerName, responseUrl) {
+function handleBriefMeCommand(writerName, responseUrl, payload, invokingUser) {
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getSheetByName('Sheet1');
@@ -353,14 +441,15 @@ function handleBriefMeCommand(writerName, responseUrl) {
     var summary = getSummaryFromEdenAI(latestProposal, "brief");
 
     // Respond in the same Slack channel
-    postToSlack(responseUrl, `Brief for ${writerName}'s latest proposal: ${summary}`);
+    // postToSlack(responseUrl, `Brief for ${writerName}'s latest proposal: ${summary}`);
+    postMessageToChannel(payload.channel_id, `${invokingUser} requested a brief for ${writerName}'s latest proposal, here's what I can provide: \n${summary}`)
   } catch (error) {
     Logger.log("Error in handleBriefMeCommand: " + error.message);
     postToSlack(responseUrl, "Error: " + error.message);
   }
 }
 
-function handleGuideCommand(writerName, responseUrl) {
+function handleGuideCommand(writerName, responseUrl, payload, invokingUser) {
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getSheetByName('Sheet1');
@@ -391,14 +480,16 @@ function handleGuideCommand(writerName, responseUrl) {
     var summary = getSummaryFromEdenAI(latestProposal, "guide");
 
     // Respond in the same Slack channel
-    postToSlack(responseUrl, `Guide for ${writerName}'s latest proposal: ${summary}`);
+    postMessageToChannel(payload.channel_id, `${invokingUser} requested a timeline for ${writerName}'s proposal completion: \n${summary}`)
   } catch (error) {
     Logger.log("Error in handleBriefMeCommand: " + error.message);
+    // postToSlack(responseUrl, "Error: " + error.message);
     postToSlack(responseUrl, "Error: " + error.message);
+
   }
 }
 
-function handleCaselawCommand(writerName, responseUrl) {
+function handleCaselawCommand(writerName, responseUrl, payload, invokingUser) {
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getSheetByName('Sheet1');
@@ -429,25 +520,36 @@ function handleCaselawCommand(writerName, responseUrl) {
     var summary = getSummaryFromEdenAI(latestProposal, "caselaw");
 
     // Respond in the same Slack channel
-    postToSlack(responseUrl, `Legal resources for ${writerName}'s latest proposal: ${summary}`);
+    // postToSlack(responseUrl, `Legal resources for ${writerName}'s latest proposal: ${summary}`);
+    postMessageToChannel(payload.channel_id, `${invokingUser} requested a list of legal resources for ${writerName}'s latest proposal: \n${summary}`)
+
   } catch (error) {
     Logger.log("Error in handleBriefMeCommand: " + error.message);
     postToSlack(responseUrl, "Error: " + error.message);
   }
 }
 
+//HELPERS
 
 function getSummaryFromEdenAI(proposal, mode) {
   var edenApiKey = PropertiesService.getScriptProperties().getProperty('EDEN_API_KEY');
   var url = 'https://api.edenai.run/v2/text/chat';
-  if (mode === "brief") {
-    var prompt = "Briefly explain this topic: ";
-  } else if (mode === "guide") {
-    var prompt = "Create a timeline of completion within the next month for a 1500 word paper with the following prompt: ";
-  } else if (mode === "caselaw") {
-    var prompt = "Provide me with links to legal resources about the following prompt: ";
-  } else {
-    throw new Error("Mode not specified");
+  var prompt;
+  switch (mode) {
+    case "brief":
+      prompt = "Briefly explain this topic: ";
+      break;
+    case "guide":
+      prompt = "Create a timeline of completion within the next month for a 1500 word paper with the following prompt: ";
+      break;
+    case "caselaw":
+      prompt = "Provide me with links to legal resources about the following prompt: ";
+      break;
+    case "chat":
+      prompt = ""
+      break;
+    default:
+      throw new Error("Mode not specified");
   }
 
   var payload = {
@@ -528,6 +630,52 @@ function sendPrivateMessage(username, message) {
 
   var response = UrlFetchApp.fetch(url, options);
   Logger.log("Slack API response: " + response.getContentText());
+}
+
+function getUserFullName(userId) {
+  var token = PropertiesService.getScriptProperties().getProperty('SLACK_BOT_TOKEN');
+  var url = 'https://slack.com/api/users.info?user=' + userId;
+  
+  var options = {
+    method: 'get',
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  };
+
+  var response = UrlFetchApp.fetch(url, options);
+  var result = JSON.parse(response.getContentText());
+
+  if (!result.ok) {
+    throw new Error("Could not retrieve user info: " + result.error);
+  }
+
+  return result.user.profile.real_name;
+}
+
+function postMessageToChannel(channel, message) {
+  var token = PropertiesService.getScriptProperties().getProperty('SLACK_BOT_TOKEN');
+  var url = 'https://slack.com/api/chat.postMessage';
+  var payload = {
+    channel: channel,
+    text: message
+  };
+
+  var options = {
+    method: 'post',
+    contentType: 'application/json',
+    headers: {
+      'Authorization': 'Bearer ' + token
+    },
+    payload: JSON.stringify(payload)
+  };
+
+  var response = UrlFetchApp.fetch(url, options);
+  Logger.log("Slack API response: " + response.getContentText());
+
+  if (response.getResponseCode() !== 200) {
+    throw new Error("Slack API request failed with status: " + response.getResponseCode());
+  }
 }
 
 function postToSlack(responseUrl, message) {
