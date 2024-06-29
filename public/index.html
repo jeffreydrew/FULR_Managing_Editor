@@ -1,89 +1,820 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<html lang="en">
+    <head>
+        <title>FULR.Bot</title>
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/10.12.2/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/10.12.2/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+        <!-- Meta -->
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+        <meta
+            name="description"
+            content="Bootstrap 4 Template For Software Startups"
+        />
+        <link rel="shortcut icon" href="favicon.png" />
+        <link rel="icon" href="favicon.png" type="image/png" />
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+        <!-- Google Font -->
+        <link
+            href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700&display=swap"
+            rel="stylesheet"
+        />
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
-    </script>
-  </body>
+        <!-- FontAwesome JS-->
+        <script defer src="assets/fontawesome/js/all.min.js"></script>
+
+        <!-- Plugins CSS -->
+        <link
+            rel="stylesheet"
+            href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.2/styles/atom-one-dark.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="assets/plugins/simplelightbox/simple-lightbox.min.css"
+        />
+
+        <!-- Theme CSS -->
+        <link id="theme-style" rel="stylesheet" href="assets/css/theme.css" />
+    </head>
+
+    <body class="docs-page">
+        <header class="header fixed-top">
+            <div class="branding docs-branding">
+                <div class="container-fluid position-relative py-2">
+                    <div class="docs-logo-wrapper">
+                        <button
+                            id="docs-sidebar-toggler"
+                            class="docs-sidebar-toggler docs-sidebar-visible me-2 d-xl-none"
+                            type="button"
+                        >
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                        <div class="site-logo">
+                            <a class="navbar-brand" href="index.html"
+                                ><img
+                                    class="logo-icon me-2"
+                                    src="favicon.png"
+                                    alt="logo"
+                                    style="width: 7%"
+                                    ;
+                                /><span class="logo-text"
+                                    >FULR<span class="text-alt"
+                                        >.Bot</span
+                                    ></span
+                                ></a
+                            >
+                        </div>
+                    </div>
+                    <!--//docs-logo-wrapper-->
+                    <div
+                        class="docs-top-utilities d-flex justify-content-end align-items-center"
+                    >
+                        <ul
+                            class="social-list list-inline mx-md-3 mx-lg-5 mb-0 d-none d-lg-flex"
+                        >
+                            <li class="list-inline-item">
+                                <a href="#"
+                                    ><i class="fab fa-github fa-fw"></i
+                                ></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#"
+                                    ><i class="fab fa-twitter fa-fw"></i
+                                ></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#"
+                                    ><i class="fab fa-slack fa-fw"></i
+                                ></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#"
+                                    ><i class="fab fa-product-hunt fa-fw"></i
+                                ></a>
+                            </li>
+                        </ul>
+                        <!--//social-list-->
+                        <a
+                            href="/login.html"
+                            class="btn btn-primary d-none d-lg-flex"
+                            >Login</a
+                        >
+                    </div>
+                    <!--//docs-top-utilities-->
+                </div>
+                <!--//container-->
+            </div>
+            <!--//branding-->
+        </header>
+        <!--//header-->
+
+        <div class="docs-wrapper">
+            <div id="docs-sidebar" class="docs-sidebar">
+                <div class="top-search-box d-lg-none p-3">
+                    <form class="search-form">
+                        <input
+                            type="text"
+                            placeholder="Search the docs..."
+                            name="search"
+                            class="form-control search-input"
+                        />
+                        <button
+                            type="submit"
+                            class="btn search-btn"
+                            value="Search"
+                        >
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+                <nav id="docs-nav" class="docs-nav navbar">
+                    <ul
+                        class="section-items list-unstyled nav flex-column pb-3"
+                    >
+                        <li class="nav-item section-title">
+                            <a
+                                class="nav-link scrollto active"
+                                href="#section-1"
+                                ><span class="theme-icon-holder me-2"
+                                    ><i class="fas fa-map-signs"></i></span
+                                >Documentation</a
+                            >
+                        </li>
+
+                        <li class="nav-item section-title mt-3">
+                            <a class="nav-link scrollto" href="#section-2"
+                                ><span class="theme-icon-holder me-2"
+                                    ><i class="fas fa-arrow-down"></i></span
+                                >How it Works</a
+                            >
+                        </li>
+
+                        <li class="nav-item section-title mt-3">
+                            <a class="nav-link scrollto" href="#section-3"
+                                ><span class="theme-icon-holder me-2"
+                                    ><i class="fas fa-box"></i></span
+                                >Workflow Commands</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link scrollto" href="#item-3-1"
+                                >/add-editor</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link scrollto" href="#item-3-2"
+                                >/writers-for</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link scrollto" href="#item-3-3"
+                                >/editor-for</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link scrollto" href="#item-3-4"
+                                >/add-completion-date</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link scrollto" href="#item-3-5"
+                                >/meet</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link scrollto" href="#item-3-6"
+                                >/need-checkin</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link scrollto" href="#item-3-7"
+                                >/update-status</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link scrollto" href="#item-3-8"
+                                >/get-status</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link scrollto" href="#item-3-9"
+                                >/list-writers</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link scrollto" href="#item-3-10"
+                                >/help</a
+                            >
+                        </li>
+
+                        <li class="nav-item section-title mt-3">
+                            <a class="nav-link scrollto" href="#section-5"
+                                ><span class="theme-icon-holder me-2"
+                                    ><i class="fas fa-tools"></i></span
+                                >Generative AI Commands</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link scrollto" href="#item-5-1"
+                                >/brief-me</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link scrollto" href="#item-5-2"
+                                >/guide</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link scrollto" href="#item-5-3"
+                                >/caselaw</a
+                            >
+                        </li>
+                        <li class="nav-item section-title mt-3">
+                            <a class="nav-link scrollto" href="#section-6"
+                                ><span class="theme-icon-holder me-2"
+                                    ><i class="fas fa-laptop-code"></i></span
+                                >Technical Details</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link scrollto" href="#item-6-1"
+                                >Slack Configuration</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link scrollto" href="#item-6-2"
+                                >Google App Script</a
+                            >
+                        </li>
+                        <li class="nav-item section-title mt-3">
+                            <a class="nav-link scrollto" href="#section-7"
+                                ><span class="theme-icon-holder me-2"
+                                    ><i class="fas fa-tablet-alt"></i></span
+                                >Contribute</a
+                            >
+                        </li>
+                        <li class="nav-item section-title mt-3">
+                            <a class="nav-link scrollto" href="#section-8"
+                                ><span class="theme-icon-holder me-2"
+                                    ><i class="fas fa-book-reader"></i></span
+                                >Contact</a
+                            >
+                        </li>
+                    </ul>
+                </nav>
+                <!--//docs-nav-->
+            </div>
+            <!--//docs-sidebar-->
+            <div class="docs-content" style="padding-bottom: 0">
+                <img
+                    class="HomepageBackground"
+                    src="https://b.stripecdn.com/docs-statics-srv/assets/52d6e32f24e1d2872960ba1d0cb8aac5.webp"
+                    alt=""
+                />
+                <div class="HomepageBackground--overlay Box-root"></div>
+
+                <div class="container">
+                    <article class="docs-article" id="section-1">
+                        <header
+                            class="docs-header"
+                            style="
+                                background-color: rgba(255, 255, 255, 0.75);
+                                box-shadow: 0 0 64px 64px
+                                    rgba(255, 255, 255, 0.75);
+                            "
+                        >
+                            <h1 class="docs-heading">
+                                Documentation
+                                <span class="docs-time"
+                                    >Last updated: Jun 29, 2024</span
+                                >
+                            </h1>
+                            <section class="docs-intro">
+                                <p>
+                                    The FULR Managing Editor Slack Bot is
+                                    designed to streamline the workflow for
+                                    editors' tasks. From assigning editors to
+                                    writers to summarizing proposals, this bot
+                                    leverages Google Sheets and GPT4 to automate
+                                    and facilitate various editorial tasks.
+                                </p>
+                                <p>
+                                    A note on use: names must be typed exactly
+                                    as in the form, and use of semi-colons must
+                                    be observed when passing multiple arguments
+                                    into a command.
+                                </p>
+                            </section>
+                            <!--//docs-intro-->
+                        </header>
+                    </article>
+                    <article class="docs-article" id="section-2">
+                        <header class="docs-header">
+                            <h1 class="docs-heading">How it Works</h1>
+                            <section class="docs-intro">
+                                <p>
+                                    The FULR Managing Editor Slack Bot operates
+                                    through a series of slash commands that
+                                    interact with Google Sheets to manage and
+                                    automate editorial tasks. Each command is
+                                    designed to handle specific workflows,
+                                    ensuring efficiency and accuracy in managing
+                                    the editorial process. For more information
+                                    on the technical details of the bot, see the
+                                    <a href="#section-6">Technical Details</a>
+                                    section.
+                                </p>
+                            </section>
+                        </header>
+                    </article>
+
+                    <article class="docs-article" id="section-3">
+                        <header class="docs-header">
+                            <h1 class="docs-heading">Workflow Commands</h1>
+                        </header>
+
+                        <section class="docs-section" id="item-3-1">
+                            <div id="copyContainer" class="copy-container">
+                                <span id="copyText" class="section-heading"
+                                    >/add-editor</span
+                                >
+                                <span id="copyBubble" class="copy-bubble"
+                                    >Copy</span
+                                >
+                            </div>
+                            <p>Assigns an editor to a writer.</p>
+                            <p>
+                                Usage:
+                                <code
+                                    >/add-editor [writer (full name): editor
+                                    (full name)]</code
+                                >
+                            </p>
+                        </section>
+
+                        <section class="docs-section" id="item-3-2">
+                            <div id="copyContainer" class="copy-container">
+                                <span id="copyText" class="section-heading"
+                                    >/writers-for</span
+                                >
+                                <span id="copyBubble" class="copy-bubble"
+                                    >Copy</span
+                                >
+                            </div>
+                            <p>
+                                Lists all writers assigned to a specific editor.
+                            </p>
+                            <p>
+                                Usage:
+                                <code>/writers-for [editor (full name)]</code>
+                            </p>
+                        </section>
+
+                        <section class="docs-section" id="item-3-3">
+                            <div id="copyContainer" class="copy-container">
+                                <span id="copyText" class="section-heading"
+                                    >/editor-for</span
+                                >
+                                <span id="copyBubble" class="copy-bubble"
+                                    >Copy</span
+                                >
+                            </div>
+                            <p>
+                                Displays the editor assigned to a specific
+                                writer.
+                            </p>
+                            <p>
+                                Usage:
+                                <code>/editor-for [writer (full name)]</code>
+                            </p>
+                        </section>
+
+                        <section class="docs-section" id="item-3-4">
+                            <div id="copyContainer" class="copy-container">
+                                <span id="copyText" class="section-heading"
+                                    >/add-completion-date</span
+                                >
+                                <span id="copyBubble" class="copy-bubble"
+                                    >Copy</span
+                                >
+                            </div>
+                            <p>Adds a completion date for a writer's task.</p>
+                            <p>
+                                Usage:
+                                <code
+                                    >/add-completion-date [writer (full name):
+                                    date]</code
+                                >
+                            </p>
+                        </section>
+
+                        <section class="docs-section" id="item-3-5">
+                            <div id="copyContainer" class="copy-container">
+                                <span id="copyText" class="section-heading"
+                                    >/meet</span
+                                >
+                                <span id="copyBubble" class="copy-bubble"
+                                    >Copy</span
+                                >
+                            </div>
+                            <p>
+                                Schedules a meeting between an editor and a
+                                writer.
+                            </p>
+                            <p>
+                                Usage:
+                                <code>/meet [writer (full name): date]</code>
+                            </p>
+                        </section>
+
+                        <section class="docs-section" id="item-3-6">
+                            <div id="copyContainer" class="copy-container">
+                                <span id="copyText" class="section-heading"
+                                    >/need-checkin</span
+                                >
+                                <span id="copyBubble" class="copy-bubble"
+                                    >Copy</span
+                                >
+                            </div>
+                            <p>Lists writers who need a check-in.</p>
+                            <p>
+                                Usage:
+                                <code>/need-checkin</code>
+                            </p>
+                        </section>
+
+                        <section class="docs-section" id="item-3-7">
+                            <div id="copyContainer" class="copy-container">
+                                <span id="copyText" class="section-heading"
+                                    >/update-status</span
+                                >
+                                <span id="copyBubble" class="copy-bubble"
+                                    >Copy</span
+                                >
+                            </div>
+                            <p>Updates the status of a writer's task.</p>
+                            <p>
+                                Usage:
+                                <code
+                                    >/update-status [writer (full name):
+                                    status]</code
+                                >
+                            </p>
+                        </section>
+
+                        <section class="docs-section" id="item-3-8">
+                            <div id="copyContainer" class="copy-container">
+                                <span id="copyText" class="section-heading"
+                                    >/get-status</span
+                                >
+                                <span id="copyBubble" class="copy-bubble"
+                                    >Copy</span
+                                >
+                            </div>
+                            <p>
+                                Retrieves the current status of a writer's task.
+                            </p>
+                            <p>
+                                Usage:
+                                <code>/get-status [writer (full name)]</code>
+                            </p>
+                        </section>
+
+                        <section class="docs-section" id="item-3-9">
+                            <div id="copyContainer" class="copy-container">
+                                <span id="copyText" class="section-heading"
+                                    >/list-writers</span
+                                >
+                                <span id="copyBubble" class="copy-bubble"
+                                    >Copy</span
+                                >
+                            </div>
+                            <p>
+                                Lists all writers currently assigned to editors.
+                            </p>
+                            <p>
+                                Usage:
+                                <code>/list-writers</code>
+                            </p>
+                        </section>
+
+                        <section class="docs-section" id="item-3-10">
+                            <div id="copyContainer" class="copy-container">
+                                <span id="copyText" class="section-heading"
+                                    >/help</span
+                                >
+                                <span id="copyBubble" class="copy-bubble"
+                                    >Copy</span
+                                >
+                            </div>
+                            <p>
+                                Provides help and usage information for all
+                                commands.
+                            </p>
+                            <p>
+                                Usage:
+                                <code>/help</code>
+                            </p>
+                        </section>
+                    </article>
+
+                    <article class="docs-article" id="section-5">
+                        <header class="docs-header">
+                            <h1 class="docs-heading">Generative AI Commands</h1>
+                        </header>
+
+                        <section class="docs-section" id="item-5-1">
+                            <div id="copyContainer" class="copy-container">
+                                <span id="copyText" class="section-heading"
+                                    >/brief-me</span
+                                >
+                                <span id="copyBubble" class="copy-bubble"
+                                    >Copy</span
+                                >
+                            </div>
+                            <p>Generates a brief summary of a proposal.</p>
+                            <p>
+                                Usage:
+                                <code>/brief-me [writer (full name)]</code>
+                            </p>
+                        </section>
+
+                        <section class="docs-section" id="item-5-2">
+                            <div id="copyContainer" class="copy-container">
+                                <span id="copyText" class="section-heading"
+                                    >/guide</span
+                                >
+                                <span id="copyBubble" class="copy-bubble"
+                                    >Copy</span
+                                >
+                            </div>
+                            <p>Provides a step-by-step guide based on input.</p>
+                            <p>
+                                Usage:
+                                <code>/guide [writer (full name)]</code>
+                            </p>
+                        </section>
+
+                        <section class="docs-section" id="item-5-3">
+                            <div id="copyContainer" class="copy-container">
+                                <span id="copyText" class="section-heading"
+                                    >/caselaw</span
+                                >
+                                <span id="copyBubble" class="copy-bubble"
+                                    >Copy</span
+                                >
+                            </div>
+                            <p>Retrieves relevant case law based on input.</p>
+                            <p>
+                                Usage:
+                                <code>/caselaw [writer (full name)]</code>
+                            </p>
+                        </section>
+                    </article>
+
+                    <article class="docs-article" id="section-6">
+                        <header class="docs-header">
+                            <h1 class="docs-heading">Technical Details</h1>
+                        </header>
+                        <section class="docs-section" id="item-6-1">
+                            <h2 class="section-heading">Slack Configuration</h2>
+                            <p>
+                                Detailed instructions on how to configure the
+                                Slack bot, including setting up commands and
+                                integrating with Google Sheets.
+                            </p>
+                        </section>
+                        <section class="docs-section" id="item-6-2">
+                            <h2 class="section-heading">Google App Script</h2>
+                            <p>
+                                Explanation of the Google App Script used to
+                                handle Slack commands and interact with Google
+                                Sheets.
+                            </p>
+                            <!-- ** Embed github code starts ** -->
+                            <div
+                                class="docs-code-block"
+                                style="max-height: 400px; overflow-y: auto"
+                            >
+                                <script src="https://gist.github.com/jeffreydrew/7737677cd0e4043b4792eec1fe3199b6.js"></script>
+                            </div>
+                            <!-- ** Embed github code ends ** -->
+                        </section>
+                    </article>
+
+                    <article class="docs-article" id="section-7">
+                        <header class="docs-header">
+                            <h1 class="docs-heading">Contribute</h1>
+                        </header>
+                        <section class="docs-section">
+                            <p>
+                                Information on how to contribute to the
+                                development of the FULR Managing Editor Slack
+                                Bot, including guidelines for submitting issues
+                                and pull requests.
+                            </p>
+                        </section>
+                    </article>
+
+                    <article class="docs-article" id="section-8">
+                        <header class="docs-header">
+                            <h1 class="docs-heading">Contact</h1>
+                        </header>
+                        <section class="docs-section">
+                            <p>
+                                For support and inquiries, or to integrate
+                                FULR.Bot into your workspace, you can reach out
+                                through the following channels:
+                            </p>
+                            
+                            <div class="container">
+                                <form id="contactForm">
+                                    <h2>Contact Us</h2>
+                                    <label for="name">Name:</label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        name="name"
+                                        required
+                                    />
+                                    <label for="email">Email:</label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        required
+                                    />
+                                    <label for="message">Message:</label>
+                                    <textarea
+                                        id="message"
+                                        name="message"
+                                        required
+                                    ></textarea>
+                                    <button type="submit">Submit</button>
+                                </form>
+                            </div>
+                        </section>
+                    </article>
+
+                    <footer class="footer">
+                        <div class="container text-center py-5">
+                            <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
+                            <small class="copyright"
+                                >Designed with <span class="sr-only">love</span
+                                ><i
+                                    class="fas fa-heart"
+                                    style="color: #fb866a"
+                                ></i>
+                                by
+                                <a
+                                    class="theme-link"
+                                    href="http://themes.3rdwavemedia.com"
+                                    target="_blank"
+                                    >Xiaoying Riley</a
+                                >
+                                for the Florida Undergraduate Law Review</small
+                            >
+                            <ul class="social-list social-row list-unstyled pt-4 mb-0">
+                                <li class="list-inline-item">
+                                    <span class="theme-icon-holder me-2">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    <a href="mailto:jeffreydrew@ufl.edu"
+                                        >jeffreydrew@ufl.edu</a
+                                    >
+                                </li>
+                                <li class="list-inline-item">
+                                    <span class="theme-icon-holder me-2">
+                                        <i class="fab fa-github"></i>
+                                    </span>
+                                    <a
+                                        href="https://github.com/jeffreydrew"
+                                        target="_blank"
+                                        >@jeffreydrew</a
+                                    >
+                                </li>
+                                </li>
+                                <li class="list-inline-item">
+                                    <span class="theme-icon-holder me-2">
+                                        <i class="fas fa-globe"></i>
+                                    </span>
+                                    <a
+                                        href="https://www.fulr.org"
+                                        target="_blank"
+                                        >Florida Undergraduate Law Review</a
+                                    >
+                                </li>
+                            </ul>
+                            <!--//social-list-->
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </div>
+        <!--//docs-wrapper-->
+
+        <!-- Javascript -->
+        <script src="assets/plugins/popper.min.js"></script>
+        <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+        <!-- Page Specific JS -->
+        <script src="assets/plugins/smoothscroll.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js"></script>
+        <script src="assets/js/highlight-custom.js"></script>
+        <script src="assets/plugins/simplelightbox/simple-lightbox.min.js"></script>
+        <script src="assets/plugins/gumshoe/gumshoe.polyfills.min.js"></script>
+        <script src="assets/js/docs.js"></script>
+    </body>
 </html>
+<style>
+    .HomepageBackground {
+        position: absolute;
+        top: -32px;
+        left: 0;
+        width: 100%;
+        z-index: -10;
+        height: 350px;
+    }
+    .HomepageBackground--overlay {
+        position: absolute;
+        background-image: radial-gradient(rgba(0, 0, 0, 0) 1.5px, #fff 1px);
+        background-size: 14px 14px;
+        width: 100%;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        z-index: -9;
+    }
+    .copy-container {
+        display: flex;
+        align-items: center;
+        background-color: #f0f0f0;
+        border: 1px solid #d0d0d0;
+        border-radius: 10px;
+        padding: 5px 10px;
+        margin-bottom: 10px;
+        user-select: none;
+        justify-content: space-between; /* Add this line */
+    }
+
+    .section-heading {
+        margin-bottom: 0 !important;
+    }
+
+    .copy-bubble {
+        background-color: #e0e0e0;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+        user-select: none;
+    }
+    .social-row {
+    display: flex;
+    justify-content: space-around; /* This spreads items evenly across the row */
+    align-items: center; /* This centers items vertically */
+    flex-wrap: wrap; /* This allows items to wrap into the next row if needed */
+}
+
+.list-inline-item {
+    display: flex;
+    align-items: center; /* This vertically centers the items if their heights differ */
+}
+</style>
+
+<script>
+    document
+        .getElementById("copyBubble")
+        .addEventListener("click", function () {
+            // Reference the h2 element and the bubble itself
+            const textElement = document.getElementById("copyText");
+            const bubble = this;
+
+            // Make the bubble lighter when clicked
+            bubble.style.backgroundColor = "#f8f8f8"; // Lighter color
+
+            // Create a temporary textarea element
+            const textarea = document.createElement("textarea");
+            // Set its value to the text content of the h2 element
+            textarea.value = textElement.textContent;
+            // Append it to the body
+            document.body.appendChild(textarea);
+            // Select the text
+            textarea.select();
+            // Execute the "Copy" command
+            document.execCommand("copy");
+            // Remove the textarea element
+            document.body.removeChild(textarea);
+
+            // Change the bubble text to "Copied!"
+            bubble.textContent = "Copied!";
+
+            // Optional: Change it back to "Copy" and revert color after 3 seconds
+            setTimeout(() => {
+                bubble.textContent = "Copy";
+                bubble.style.backgroundColor = ""; // Revert to original color
+            }, 3000);
+        });
+</script>
