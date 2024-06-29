@@ -40,52 +40,67 @@ const admin = require("firebase-admin");
 const sgMail = require("@sendgrid/mail");
 
 
-const signupForm = document.getElementById("signup-form");
-signupForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = document.getElementById("signup-email").value;
-    const password = document.getElementById("signup-password").value;
+// Register
+const registerForm = document.getElementById('register-form');
+if (registerForm) {
+    registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
 
-    createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            console.log("User signed up:", userCredential.user);
-        })
-        .catch((error) => {
-            console.error("Error signing up:", error);
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                window.location.href = 'dashboard.html';
+            })
+            .catch((error) => {
+                console.error('Error registering:', error);
+            });
+    });
+}
+
+// Login
+const loginForm = document.getElementById('login-form');
+if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                window.location.href = 'dashboard.html';
+            })
+            .catch((error) => {
+                console.error('Error logging in:', error);
+            });
+    });
+}
+
+
+// Logout
+const logoutButton = document.getElementById('logout');
+if (logoutButton) {
+    logoutButton.addEventListener('click', () => {
+        signOut(auth).then(() => {
+            window.location.href = 'login.html';
+        }).catch((error) => {
+            console.error('Error logging out:', error);
         });
-});
-
-const loginForm = document.getElementById("login-form");
-loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = document.getElementById("login-email").value;
-    const password = document.getElementById("login-password").value;
-
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            console.log("User logged in:", userCredential.user);
-        })
-        .catch((error) => {
-            console.error("Error logging in:", error);
-        });
-});
-
-const logoutButton = document.getElementById("logout");
-logoutButton.addEventListener("click", () => {
-    signOut(auth)
-        .then(() => {
-            console.log("User logged out");
-        })
-        .catch((error) => {
-            console.error("Error logging out:", error);
-        });
-});
+    });
+}
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        document.getElementById("dashboard").style.display = "block";
+        if (
+            window.location.pathname === "/login.html" ||
+            window.location.pathname === "/register.html"
+        ) {
+            window.location.href = "dashboard.html";
+        }
     } else {
-        document.getElementById("dashboard").style.display = "none";
+        if (window.location.pathname === "/dashboard.html") {
+            window.location.href = "login.html";
+        }
     }
 });
 
