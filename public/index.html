@@ -582,17 +582,16 @@
                         <section class="docs-section" id="item-6-1">
                             <h2 class="section-heading">Slack Configuration</h2>
                             <p>
-                                Detailed instructions on how to configure the
-                                Slack bot, including setting up commands and
-                                integrating with Google Sheets.
+                                Slack App ID: A07AU2FTQLQ
+                            </p>
+                            <p>
+                                Slack Client ID: 6531058901282.7368083942704
                             </p>
                         </section>
                         <section class="docs-section" id="item-6-2">
                             <h2 class="section-heading">Google App Script</h2>
                             <p>
-                                Explanation of the Google App Script used to
-                                handle Slack commands and interact with Google
-                                Sheets.
+                                Here is the source code for FULR.Bot. It is connected as a Google App Script to the Writing Proposal Google Sheet.
                             </p>
                             <!-- ** Embed github code starts ** -->
                             <div
@@ -611,10 +610,12 @@
                         </header>
                         <section class="docs-section">
                             <p>
-                                Information on how to contribute to the
-                                development of the FULR Managing Editor Slack
-                                Bot, including guidelines for submitting issues
-                                and pull requests.
+                                Make all pull requests to                                      <a
+                                        href="https://github.com/jeffreydrew/FULR_Managing_Editor"
+                                        target="_blank"
+                                        > the GitHub repo</a
+                                    > under a new branch with your name. 
+
                             </p>
                         </section>
                     </article>
@@ -625,60 +626,12 @@
                         </header>
                         <section class="docs-section">
                             <p>
-                                For support and inquiries, or to integrate
-                                FULR.Bot into your workspace, you can reach out
+                                For support and inquiries related to the FULR
+                                Managing Editor Slack Bot, you can reach out
                                 through the following channels:
                             </p>
-                            
-                            <div class="container">
-                                <form id="contactForm">
-                                    <h2>Contact Us</h2>
-                                    <label for="name">Name:</label>
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        name="name"
-                                        required
-                                    />
-                                    <label for="email">Email:</label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        required
-                                    />
-                                    <label for="message">Message:</label>
-                                    <textarea
-                                        id="message"
-                                        name="message"
-                                        required
-                                    ></textarea>
-                                    <button type="submit">Submit</button>
-                                </form>
-                            </div>
-                        </section>
-                    </article>
-
-                    <footer class="footer">
-                        <div class="container text-center py-5">
-                            <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
-                            <small class="copyright"
-                                >Designed with <span class="sr-only">love</span
-                                ><i
-                                    class="fas fa-heart"
-                                    style="color: #fb866a"
-                                ></i>
-                                by
-                                <a
-                                    class="theme-link"
-                                    href="http://themes.3rdwavemedia.com"
-                                    target="_blank"
-                                    >Xiaoying Riley</a
-                                >
-                                for the Florida Undergraduate Law Review</small
-                            >
-                            <ul class="social-list social-row list-unstyled pt-4 mb-0">
-                                <li class="list-inline-item">
+                            <ul class="contact-info list-unstyled">
+                                <li class="contact-item">
                                     <span class="theme-icon-holder me-2">
                                         <i class="fas fa-envelope"></i>
                                     </span>
@@ -686,7 +639,7 @@
                                         >jeffreydrew@ufl.edu</a
                                     >
                                 </li>
-                                <li class="list-inline-item">
+                                <li class="contact-item">
                                     <span class="theme-icon-holder me-2">
                                         <i class="fab fa-github"></i>
                                     </span>
@@ -696,8 +649,7 @@
                                         >@jeffreydrew</a
                                     >
                                 </li>
-                                </li>
-                                <li class="list-inline-item">
+                                <li class="contact-item">
                                     <span class="theme-icon-holder me-2">
                                         <i class="fas fa-globe"></i>
                                     </span>
@@ -708,7 +660,38 @@
                                     >
                                 </li>
                             </ul>
+                        </section>
+                    </article>
+
+                    <footer class="footer">
+                        <div class="container text-center py-5">
+                            <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
+                            <small class="copyright">
+                                Designed with <span class="sr-only">love</span>
+                                <i
+                                    class="fas fa-heart"
+                                    style="color: #fb866a"
+                                ></i>
+                                by
+                                <a
+                                    class="theme-link"
+                                    href="http://themes.3rdwavemedia.com"
+                                    target="_blank"
+                                >
+                                    Xiaoying Riley
+                                </a>
+                                for the Florida Undergraduate Law Review
+                            </small>
+                            <ul
+                                class="social-list social-row list-unstyled pt-4 mb-0"
+                            ></ul>
                             <!--//social-list-->
+                            <div class="pt-3">
+                                <small class="copyright">
+                                    &copy; Florida Undergraduate Law Review
+                                    2024. All rights reserved.
+                                </small>
+                            </div>
                         </div>
                     </footer>
                 </div>
@@ -772,16 +755,11 @@
         user-select: none;
     }
     .social-row {
-    display: flex;
-    justify-content: space-around; /* This spreads items evenly across the row */
-    align-items: center; /* This centers items vertically */
-    flex-wrap: wrap; /* This allows items to wrap into the next row if needed */
-}
-
-.list-inline-item {
-    display: flex;
-    align-items: center; /* This vertically centers the items if their heights differ */
-}
+        display: flex;
+        justify-content: space-around; /* This spreads items evenly across the row */
+        align-items: center; /* This centers items vertically */
+        flex-wrap: wrap; /* This allows items to wrap into the next row if needed */
+    }
 </style>
 
 <script>
