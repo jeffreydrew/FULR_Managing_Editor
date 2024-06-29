@@ -35,6 +35,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore();
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
+const sgMail = require("@sendgrid/mail");
+
 
 const signupForm = document.getElementById("signup-form");
 signupForm.addEventListener("submit", (e) => {
@@ -98,6 +102,44 @@ createUserWithEmailAndPassword(auth, email, password)
         console.error("Error signing up:", error);
     });
 
+// Reference to the form
+const contactForm = document.getElementById("contactForm");
+
+// Listen for form submit
+contactForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    // Get form values
+    let name = contactForm["name"].value;
+    let email = contactForm["email"].value;
+    let message = contactForm["message"].value;
+
+    // Save message to Firestore
+    saveMessage(name, email, message);
+
+    // Clear form
+    contactForm.reset();
+});
+
+// Save message to Firestore
+function saveMessage(name, email, message) {
+    db.collection("contacts")
+        .add({
+            name: name,
+            email: email,
+            message: message,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        })
+        .then(() => {
+            alert("Message sent successfully!");
+        })
+        .catch((error) => {
+            console.error("Error writing document: ", error);
+        });
+}
+
+
+//DOCUMENT LOADED---------------------------------------------------
 document.addEventListener("DOMContentLoaded", function () {
     // Smooth scroll for navigation links
     document.querySelectorAll(".navbar ul li a").forEach((anchor) => {
