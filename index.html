@@ -126,16 +126,27 @@
                             </p>
                             <div class="commands-list">
                                 <div class="command">
-                                    <code>/brief-me [writer]</code>
-                                    <button class="copy-button">Copy</button>
 
-                                    <p>
-                                        Get a brief summary of the latest
-                                        proposal for a writer.
+
+
+
                                     </p>
                                 </div>
                                 <div class="command">
-                                    <code>/guide [writer]</code>
+
+
+
+                                    <p>Create a timeline for a paper.</p>
+                                </div>
+                                <div class="command">
+
+
+
+                                    <p>Provide links to legal resources.</p>
+                                </div>
+                            </div>
+                        </section>
+                        <script src="script.js"></script>ode>/guide [writer]</code>
                                     <button class="copy-button">Copy</button>
 
                                     <p>Create a timeline for a paper.</p>
@@ -159,7 +170,7 @@
                                 <a
                                     href="mailto:support@fulr.com"
                                     style="
-                                        color: rgb(93, 177, 226);
+                        
                                         font-weight: bold;
                                     "
                                     >jeffreydrew@ufl.edu</a
@@ -189,6 +200,8 @@
                                     >https://fulr.org/</a
                                 >
                             </p>
+                        </section>
+                        <script src="script.js"></script>                          </p>
                         </section>
                     </div>
                 </main>
@@ -376,44 +389,28 @@
         }
     }
 </style>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Smooth scroll for navigation links
-        document.querySelectorAll(".navbar ul li a").forEach((anchor) => {
-            anchor.addEventListener("click", function (e) {
-                e.preventDefault();
+<!-- script to script.js -->
+ <script src="script.js"></script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-                document
-                    .querySelector(this.getAttribute("href"))
-                    .scrollIntoView({
-                        behavior: "smooth",
-                    });
-            });
-        });
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDtMn25l6Fkj3VOGZ-Nt5ZiKXSpMNofyLU",
+    authDomain: "fulr-bot.firebaseapp.com",
+    projectId: "fulr-bot",
+    storageBucket: "fulr-bot.appspot.com",
+    messagingSenderId: "921443526060",
+    appId: "1:921443526060:web:c68e25e501f52b25414609",
+    measurementId: "G-47NQB2HSQ2"
+  };
 
-        // Copy to clipboard functionality
-        document.querySelectorAll(".copy-button").forEach((button) => {
-            button.addEventListener("click", function () {
-                var codeBlock = this.previousElementSibling;
-                var textToCopy = codeBlock.innerText;
-
-                navigator.clipboard
-                    .writeText(textToCopy)
-                    .then(() => {
-                        this.textContent = "Copied!";
-                        this.style.backgroundColor = "#E7F6F2";
-                        this.style.color = "#2C3333";
-
-                        setTimeout(() => {
-                            this.textContent = "Copy";
-                            this.style.backgroundColor = "#A5C9CA";
-                            this.style.color = "#2C3333";
-                        }, 2000);
-                    })
-                    .catch((err) => {
-                        console.error("Could not copy text: ", err);
-                    });
-            });
-        });
-    });
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
 </script>
