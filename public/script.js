@@ -138,34 +138,6 @@ function saveMessage(name, email, message) {
         });
 }
 
-// Initialize Firebase Admin SDK
-admin.initializeApp();
-
-
-// Firestore trigger to send email when a new document is created
-exports.sendContactEmail = functions.firestore
-    .document('contacts/{contactId}')
-    .onCreate((snap, context) => {
-        const data = snap.data();
-        const msg = {
-            to: 'jeffreydrew@ufl.edu',
-            from: 'bot@fulr.bot',
-            subject: `${data.subject}`,
-            text: `Name: ${data.name}\nEmail: ${data.email}\nMessage: ${data.message}`,
-            html: `<p><strong>Name:</strong> ${data.name}</p>
-                   <p><strong>Email:</strong> ${data.email}</p>
-                   <p><strong>Message:</strong> ${data.message}</p>`,
-        };
-
-        return sgMail.send(msg)
-            .then(() => {
-                console.log('Email sent successfully');
-            })
-            .catch((error) => {
-                console.error('Error sending email:', error);
-            });
-    });
-
 
 //DOCUMENT LOADED---------------------------------------------------
 document.addEventListener("DOMContentLoaded", function () {
