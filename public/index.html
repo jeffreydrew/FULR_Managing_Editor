@@ -1,89 +1,416 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>FULR Slack Bot Documentation</title>
+        <link rel="icon" href="public/favicon.png" type="image/png">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/10.12.2/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/10.12.2/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/10.12.2/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <nav class="navbar">
+                <h2>Navigation</h2>
+                <ul>
+                    <li><a href="#introduction">Introduction</a></li>
+                    <li><a href="#howitworks">How it Works</a></li>
+                    <li><a href="#commands">Workflow Commands</a></li>
+                    <li><a href="#ai">Generative AI Commands</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="content">
+                <header>
+                    <div class="container">
+                        <h1>FULR Managing Editor Slack Bot Documentation</h1>
+                        <p>
+                            Welcome to the comprehensive documentation for the
+                            FULR Managing Editor Slack Bot. This bot assists
+                            editors and writers with various tasks directly
+                            within Slack.
+                        </p>
+                    </div>
+                </header>
+                <main>
+                    <div class="container">
+                        <section id="introduction">
+                            <h2>Introduction</h2>
+                            <p>
+                                The FULR Managing Editor Slack Bot is designed
+                                to streamline the workflow for editors' tasks.
+                                From assigning editors to writers to summarizing
+                                proposals, this bot leverages Google Sheets and
+                                GPT4 to automate and facilitate various
+                                editorial tasks.
+                            </p>
+                            <p>
+                                A note on use: names must be typed exactly as in
+                                the form, and use of semi-colons must be
+                                observed when passing multiple arguments into a
+                                command.
+                            </p>
+                        </section>
+                        <section id="howitworks">
+                            <h2>How it Works</h2>
+                            <p>
+                                This bot is a serverless, Slack-integrated, AI-backed assistant which uses custom API calls to and from Google sheets so we can localize our editing workflow. It's able to access and manage all information on the reponse Google Sheet, as well as generate summaries and timelines for writers' proposals. 
+                            </p>
+                            <p>
+                                It operates primarily through slash commands, which are listed below, and returns responses to the user privately.
+                                Generative AI commands, however, are published to the channel for the benefit of all editors. When a command is invoked, for example, <code>/brief-me [writer]</code>, the bot will look through all recorded responses for the latest proposal from the specified writer and generate a brief summary for that proposal.
+                            </p>
+                            <p>
+                                Currently, this bot is in it's beta phase, and is only available to the FULR editing team. Future goals include expanding the bot's capabilities to include more AI-driven features, such as generating legal briefs and case law summaries, and integrating with other channels or even other law reviews. 
+                            </p>
+                        </section>
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+                        <section id="commands">
+                            <h2>Workflow Commands</h2>
+                            <div class="commands-list">
+                                <div class="command">
+                                    <code>/add-editor [writer: editor]</code>
+                                    <button class="copy-button">Copy</button>
+                                    <p>Assign an editor to a writer.</p>
+                                </div>
+                                <div class="command">
+                                    <code>/writers-for [editor]</code>
+                                    <button class="copy-button">Copy</button>
+                                    <p>
+                                        List all writers assigned to a specific
+                                        editor.
+                                    </p>
+                                </div>
+                                <div class="command">
+                                    <code>/editor-for [writer]</code>
+                                    <button class="copy-button">Copy</button>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+                                    <p>
+                                        Get the editor assigned to a specific
+                                        writer.
+                                    </p>
+                                </div>
+                                <div class="command">
+                                    <code
+                                        >/add-completion-date [name: date]</code
+                                    >
+                                    <button class="copy-button">Copy</button>
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
-    </script>
-  </body>
+                                    <p>Add a completion date for a writer.</p>
+                                </div>
+                                <div class="command">
+                                    <code>/meet [name: date]</code>
+                                    <button class="copy-button">Copy</button>
+
+                                    <p>Send a meeting request to a user.</p>
+                                </div>
+                                <div class="command">
+                                    <code>/need-checkin</code>
+                                    <button class="copy-button">Copy</button>
+
+                                    <p>List users needing check-in.</p>
+                                </div>
+                                <div class="command">
+                                    <code>/help</code>
+                                    <button class="copy-button">Copy</button>
+
+                                    <p>List all available commands.</p>
+                                </div>
+                            </div>
+                        </section>
+                        <section id="ai">
+                            <h2>Generative AI Commands</h2>
+                            <p>
+                                These commands only require the name of a
+                                writer, and will automatically find their latest
+                                proposal and process it with GPT4.
+                            </p>
+                            <div class="commands-list">
+                                <div class="command">
+
+
+
+
+                                    </p>
+                                </div>
+                                <div class="command">
+
+
+
+                                    <p>Create a timeline for a paper.</p>
+                                </div>
+                                <div class="command">
+
+
+
+                                    <p>Provide links to legal resources.</p>
+                                </div>
+                            </div>
+                        </section>
+                        <script src="script.js"></script>ode>/guide [writer]</code>
+                                    <button class="copy-button">Copy</button>
+
+                                    <p>Create a timeline for a paper.</p>
+                                </div>
+                                <div class="command">
+                                    <code>/caselaw [writer]</code>
+                                    <button class="copy-button">Copy</button>
+
+                                    <p>Provide links to legal resources.</p>
+                                </div>
+                            </div>
+                        </section>
+                        <section id="contact">
+                            <h2>Contact</h2>
+                            <p>
+                                If you have any questions or need further
+                                assistance, or if you are looking for the source code, please reach out to:
+                            </p>
+                            <p>
+                                Email:
+                                <a
+                                    href="mailto:support@fulr.com"
+                                    style="
+                        
+                                        font-weight: bold;
+                                    "
+                                    >jeffreydrew@ufl.edu</a
+                                >
+                            </p>
+                            <p>
+                                GitHub:
+                                <a
+                                    href="
+                                    https://github.com/jeffreydrew/
+                                    "
+                                    style="
+                                        color: rgb(93, 177, 226);
+                                        font-weight: bold;
+                                    "
+                                    >@jeffreydrew</a
+                                >
+                            </p>
+                            <p>
+                                FULR Website:
+                                <a
+                                    href="https://fulr.org/"
+                                    style="
+                                        color: rgb(93, 177, 226);
+                                        font-weight: bold;
+                                    "
+                                    >https://fulr.org/</a
+                                >
+                            </p>
+                        </section>
+                        <script src="script.js"></script>                          </p>
+                        </section>
+                    </div>
+                </main>
+                <footer>
+                    <div class="container">
+                        <p>
+                            &copy; 2024 Florida Undergraduate Law Review. All
+                            rights reserved.
+                        </p>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </body>
 </html>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: "Arial", sans-serif;
+        line-height: 1.6;
+        background: linear-gradient(135deg, #2c3333 0%, #395b64 100%);
+        color: #e7f6f2;
+    }
+
+    .wrapper {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    .navbar {
+        width: 220px;
+        background: rgba(44, 51, 51, 0.95);
+        padding: 20px;
+        margin: 20px;
+        border-radius: 10px;
+        position: fixed;
+        top: 20px;
+        bottom: auto;
+        overflow-y: auto;
+    }
+
+    .navbar h2 {
+        color: #e7f6f2;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .navbar ul {
+        list-style: none;
+    }
+
+    .navbar ul li {
+        margin: 15px 0;
+    }
+
+    .navbar ul li a {
+        color: #a5c9ca;
+        text-decoration: none;
+        font-size: 1.1rem;
+        display: block;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background 0.3s, color 0.3s;
+    }
+
+    .navbar ul li a:hover {
+        background: rgba(165, 201, 202, 0.1);
+        color: #e7f6f2;
+    }
+
+    .content {
+        margin-left: 260px;
+        padding: 20px;
+        width: calc(100% - 260px);
+    }
+
+    header {
+        background: rgba(57, 91, 100, 0.85);
+        color: #e7f6f2;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    header h1 {
+        margin-bottom: 10px;
+    }
+
+    header p {
+        font-size: 1.2rem;
+    }
+
+    main {
+        padding: 20px 0;
+    }
+
+    h2 {
+        margin-top: 20px;
+        color: #a5c9ca;
+        border-bottom: 2px solid #a5c9ca;
+        padding-bottom: 5px;
+    }
+
+    .commands-list .command {
+        background: rgba(57, 91, 100, 0.85);
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 10px;
+        position: relative;
+        transition: background 0.3s;
+    }
+
+    .commands-list .command:hover {
+        background: rgba(57, 91, 100, 0.95);
+    }
+
+    .commands-list .command code {
+        display: block;
+        background: rgba(44, 51, 51, 0.95);
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        color: #e7f6f2;
+        font-size: 1.1rem;
+        position: relative;
+    }
+
+    .commands-list .command p {
+        margin: 0;
+    }
+
+    .copy-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #a5c9ca;
+        color: #2c3333;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s, color 0.3s;
+    }
+
+    .copy-button:hover {
+        background: #e7f6f2;
+        color: #2c3333;
+    }
+
+    footer {
+        background: rgba(44, 51, 51, 0.95);
+        color: #e7f6f2;
+        text-align: center;
+        padding: 10px 0;
+        margin-top: 20px;
+        border-radius: 10px;
+    }
+
+    footer p {
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .wrapper {
+            flex-direction: column;
+        }
+
+        .navbar {
+            width: 100%;
+            position: relative;
+            height: auto;
+            margin: 10px 0;
+        }
+
+        .content {
+            margin-left: 0;
+            width: 100%;
+        }
+    }
+</style>
+<!-- script to script.js -->
+ <script src="script.js"></script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDtMn25l6Fkj3VOGZ-Nt5ZiKXSpMNofyLU",
+    authDomain: "fulr-bot.firebaseapp.com",
+    projectId: "fulr-bot",
+    storageBucket: "fulr-bot.appspot.com",
+    messagingSenderId: "921443526060",
+    appId: "1:921443526060:web:c68e25e501f52b25414609",
+    measurementId: "G-47NQB2HSQ2"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
