@@ -1,6 +1,6 @@
 PropertiesService.getScriptProperties().setProperty('EDEN_API_KEY', 'YOUR_EDEN_API_KEY');
 
-PropertiesService.getScriptProperties().setProperty('SLACK_BOT_TOKEN', 'SLACK_BOT_TOKEN');
+PropertiesService.getScriptProperties().setProperty('SLACK_BOT_TOKEN', 'YOUR_SLACK_BOT_TOKEN');
 
 function doPost(e) {
   var responseUrl;
@@ -83,6 +83,15 @@ function doPost(e) {
           break;
         case "/caselaw":
           handleCaselawCommand(text, responseUrl, payload, invokingUser);
+          break;
+        case "/update-status":
+          handleUpdateStatusCommand(text, responseUrl);
+          break;
+        case "/get-status":
+          handleGetStatusCommand(text, responseUrl);
+          break;
+        case "/list-writers":
+          handleListWritersCommand(responseUrl);
           break;
         case "/help":
           handleHelpCommand(responseUrl);
@@ -442,7 +451,7 @@ function handleBriefMeCommand(writerName, responseUrl, payload, invokingUser) {
 
     // Respond in the same Slack channel
     // postToSlack(responseUrl, `Brief for ${writerName}'s latest proposal: ${summary}`);
-    postMessageToChannel(payload.channel_id, `${invokingUser} requested a brief for ${writerName}'s latest proposal, here's what I can provide: \n${summary}`)
+    postMessageToChannel(payload.channel_id, `${invokingUser} requested a brief for ${writerName}'s latest proposal, here's what I can provide: ${summary}`)
   } catch (error) {
     Logger.log("Error in handleBriefMeCommand: " + error.message);
     postToSlack(responseUrl, "Error: " + error.message);
@@ -521,13 +530,152 @@ function handleCaselawCommand(writerName, responseUrl, payload, invokingUser) {
 
     // Respond in the same Slack channel
     // postToSlack(responseUrl, `Legal resources for ${writerName}'s latest proposal: ${summary}`);
-    postMessageToChannel(payload.channel_id, `${invokingUser} requested a list of legal resources for ${writerName}'s latest proposal: \n${summary}`)
+    postMessageToChannel(payload.channel_id, `${invokingUser} requested a list of legal resources for ${writerName}'s latest proposal: ${summary}`)
 
   } catch (error) {
     Logger.log("Error in handleBriefMeCommand: " + error.message);
     postToSlack(responseUrl, "Error: " + error.message);
   }
 }
+
+function handleUpdateStatusCommand(text, responseUrl) {
+  try {
+    // Parse the message for the format "writer: status"
+    var nameStatusParts = text.split(':');
+    if (nameStatusParts.length < 2) {
+      throw new Error("Invalid message format. Expected format: 'writer: status'");
+    }
+
+    var writerName = nameStatusParts[0].trim();
+    var status = nameStatusParts.slice(1).join(' ').trim();
+
+    // Log the parsed writer name and status
+    Logger.log("Writer: " + writerName);
+    Logger.log("Status: " + status);
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('Sheet1');
+
+    // Find the row for the writer
+    var range = sheet.getRange(1, 1, sheet.getLastRow(), sheet.getLastColumn());
+    var values = range.getValues();
+    var writerColumnIndex = values[0].indexOf("Full Name");
+    var statusColumnIndex = values[0].indexOf("Status");
+
+    if (writerColumnIndex === -1 || statusColumnIndex === -1) {
+      throw new Error("Columns 'Full Name' and 'Status' must exist in the sheet.");
+    }
+
+    var rowIndex = -1;
+    for (var i = 1; i < values.length; i++) {
+      if (values[i][writerColumnIndex] === writerName) {
+        rowIndex = i + 1; // Sheet rows are 1-based
+        break;
+      }
+    }
+
+    if (rowIndex === -1) {
+      throw new Error("Writer '" + writerName + "' not found in the sheet.");
+    }
+
+    // Update the status
+    sheet.getRange(rowIndex, statusColumnIndex + 1).setValue(status);
+
+    // Respond in the same Slack channel
+    postToSlack(responseUrl, `Status updated for ${writerName}: ${status}`);
+
+    return ContentService.createTextOutput("Status updated");
+  } catch (error) {
+    Logger.log("Error in handleUpdateStatusCommand: " + error.message);
+    postToSlack(responseUrl, "Error: " + error.message);
+    return ContentService.createTextOutput("Error: " + error.message);
+  }
+}
+
+function handleGetStatusCommand(writerName, responseUrl) {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('Sheet1');
+
+    // Find the row for the writer
+    var range = sheet.getRange(1, 1, sheet.getLastRow(), sheet.getLastColumn());
+    var values = range.getValues();
+    var writerColumnIndex = values[0].indexOf("Full Name");
+    var statusColumnIndex = values[0].indexOf("Status");
+
+    if (writerColumnIndex === -1 || statusColumnIndex === -1) {
+      throw new Error("Columns 'Full Name' and 'Status' must exist in the sheet.");
+    }
+
+    var status = null;
+    for (var i = 1; i < values.length; i++) {
+      if (values[i][writerColumnIndex] === writerName) {
+        status = values[i][statusColumnIndex];
+        break;
+      }
+    }
+
+    if (!status) {
+      throw new Error("Status not found for writer '" + writerName + "'.");
+    }
+
+    // Respond in the same Slack channel
+    postToSlack(responseUrl, `Status for ${writerName}: ${status}`);
+
+    return ContentService.createTextOutput("Status retrieved");
+  } catch (error) {
+    Logger.log("Error in handleGetStatusCommand: " + error.message);
+    postToSlack(responseUrl, "Error: " + error.message);
+    return ContentService.createTextOutput("Error: " + error.message);
+  }
+}
+
+function handleListWritersCommand(responseUrl) {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('Sheet1');
+
+    // Get all data from the sheet
+    var range = sheet.getRange(1, 1, sheet.getLastRow(), sheet.getLastColumn());
+    var values = range.getValues();
+    var writerColumnIndex = values[0].indexOf("Full Name");
+    var editorColumnIndex = values[0].indexOf("Editor");
+
+    if (writerColumnIndex === -1 || editorColumnIndex === -1) {
+      throw new Error("Columns 'Full Name' and 'Editor' must exist in the sheet.");
+    }
+
+    var editors = {};
+    for (var i = 1; i < values.length; i++) {
+      var editor = values[i][editorColumnIndex];
+      var writer = values[i][writerColumnIndex];
+      if (editor in editors) {
+        editors[editor].push(writer);
+      } else {
+        editors[editor] = [writer];
+      }
+    }
+
+    var message = "Editors and their writers:\n";
+    for (var editor in editors) {
+      message += `*${editor}*\n`;
+      editors[editor].forEach(writer => {
+        message += `  - ${writer}\n`;
+      });
+    }
+
+    // Respond in the same Slack channel
+    postToSlack(responseUrl, message);
+
+    return ContentService.createTextOutput("Writers listed");
+  } catch (error) {
+    Logger.log("Error in handleListWritersCommand: " + error.message);
+    postToSlack(responseUrl, "Error: " + error.message);
+    return ContentService.createTextOutput("Error: " + error.message);
+  }
+}
+
+
 
 //HELPERS
 
