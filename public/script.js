@@ -186,27 +186,4 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         });
 
-    document.querySelectorAll("copy-bubble").forEach((button) => {
-        button.addEventListener("click", function () {
-            const codeBlock = this.previousElementSibling;
-            const textToCopy = codeBlock.innerText;
-
-            navigator.clipboard
-                .writeText(textToCopy)
-                .then(() => {
-                    this.textContent = "Copied!";
-                    this.style.backgroundColor = "#E7F6F2";
-                    this.style.color = "#2C3333";
-
-                    setTimeout(() => {
-                        this.textContent = "Copy";
-                        this.style.backgroundColor = "#A5C9CA";
-                        this.style.color = "#2C3333";
-                    }, 2000);
-                })
-                .catch((err) => {
-                    console.error("Could not copy text:", err);
-                });
-        });
-    });
 });

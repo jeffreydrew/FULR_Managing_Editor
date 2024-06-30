@@ -52,13 +52,13 @@
                             <span></span>
                             <span></span>
                         </button>
-                        <div class="site-logo">
+                        <div class="site-logo" style="width: 100px;">
                             <a class="navbar-brand" href="index.html"
                                 ><img
                                     class="logo-icon me-2"
                                     src="favicon.png"
                                     alt="logo"
-                                    style="width: 7%"
+                                    style="width: 32%"
                                     ;
                                 /><span class="logo-text"
                                     >FULR<span class="text-alt"
@@ -775,36 +775,29 @@
 </style>
 
 <script>
-    document
-        .getElementById("copyBubble")
-        .addEventListener("click", function () {
-            // Reference the h2 element and the bubble itself
-            const textElement = document.getElementById("copyText");
-            const bubble = this;
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".copy-bubble").forEach((button) => {
+            button.addEventListener("click", function () {
+                const codeBlock = this.previousElementSibling;
+                const textToCopy = codeBlock.innerText || codeBlock.textContent;
 
-            // Make the bubble lighter when clicked
-            bubble.style.backgroundColor = "#f8f8f8"; // Lighter color
+                navigator.clipboard
+                    .writeText(textToCopy)
+                    .then(() => {
+                        this.textContent = "Copied!";
+                        this.style.backgroundColor = "#E7F6F2";
+                        this.style.color = "#2C3333";
 
-            // Create a temporary textarea element
-            const textarea = document.createElement("textarea");
-            // Set its value to the text content of the h2 element
-            textarea.value = textElement.textContent;
-            // Append it to the body
-            document.body.appendChild(textarea);
-            // Select the text
-            textarea.select();
-            // Execute the "Copy" command
-            document.execCommand("copy");
-            // Remove the textarea element
-            document.body.removeChild(textarea);
-
-            // Change the bubble text to "Copied!"
-            bubble.textContent = "Copied!";
-
-            // Optional: Change it back to "Copy" and revert color after 3 seconds
-            setTimeout(() => {
-                bubble.textContent = "Copy";
-                bubble.style.backgroundColor = ""; // Revert to original color
-            }, 3000);
+                        setTimeout(() => {
+                            this.textContent = "Copy";
+                            this.style.backgroundColor = "#A5C9CA";
+                            this.style.color = "#2C3333";
+                        }, 2000);
+                    })
+                    .catch((err) => {
+                        console.error("Could not copy text:", err);
+                    });
+            });
         });
+    });
 </script>
