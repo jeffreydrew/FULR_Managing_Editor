@@ -13,13 +13,6 @@ import {
     getDoc,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import {
-    getStorage,
-    ref,
-    uploadBytesResumable,
-    getDownloadURL,
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-
 // Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyDtMn25l6Fkj3VOGZ-Nt5ZiKXSpMNofyLU",
@@ -37,30 +30,6 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth();
 const db = getFirestore(app);
-
-const functions = require("firebase-functions");
-const { Storage } = require("@google-cloud/storage");
-const { exec } = require("child_process");
-
-const storage = new Storage();
-
-exports.yourFunction = functions.https.onRequest((req, res) => {
-    const { filePath, fileName } = req.body;
-
-    exec(
-        `python3 main.py '${filePath}' '${fileName}'`,
-        (error, stdout, stderr) => {
-            if (error) {
-                console.error(`exec error: ${error}`);
-                return res.status(500).send(error);
-            }
-            console.log(`stdout: ${stdout}`);
-            console.error(`stderr: ${stderr}`);
-            res.status(200).send(stdout);
-        }
-    );
-});
-
 
 // Helper functions to manage cookies
 function setCookie(name, value, days) {
@@ -203,99 +172,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             window.location.href = "login.html";
         }
     }
-
-    //file uploads
-    const dropArea = document.getElementById("drop-area");
-    const progressBar = document.getElementById("progress-bar");
-    const uploads = document.getElementById("uploads");
-
-    ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
-        dropArea.addEventListener(eventName, preventDefaults, false);
-    });
-
-    ["dragenter", "dragover"].forEach((eventName) => {
-        dropArea.addEventListener(
-            eventName,
-            () => dropArea.classList.add("highlight"),
-            false
-        );
-    });
-
-    ["dragleave", "drop"].forEach((eventName) => {
-        dropArea.addEventListener(
-            eventName,
-            () => dropArea.classList.remove("highlight"),
-            false
-        );
-    });
-
-    dropArea.addEventListener("drop", handleDrop, false);
-
-    function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    function handleDrop(e) {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        handleFiles(files);
-    }
-
-    function handleFiles(files) {
-        [...files].forEach(uploadFile);
-    }
-
-    function uploadFile(file) {
-        const storageRef = ref(storage, "uploads/" + file.name);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-                const progress =
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                progressBar.value = progress;
-                progressBar.style.display = "block";
-            },
-            (error) => {
-                console.error("Upload failed:", error);
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    uploads.innerHTML += `<p>File ${file.name} uploaded successfully! Processing...</p>`;
-                    triggerPythonScript(
-                        uploadTask.snapshot.ref.fullPath,
-                        file.name
-                    );
-                });
-            }
-        );
-    }
-
-    function triggerPythonScript(filePath, fileName) {
-        const functionUrl =
-            "https://your-region-your-project.cloudfunctions.net/yourFunction";
-        fetch(functionUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                filePath: filePath,
-                fileName: fileName,
-            }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                const pdfUrl = data.pdfUrl;
-                uploads.innerHTML += `<p>Download your processed PDF: <a href="${pdfUrl}" target="_blank">${fileName}.pdf</a></p>`;
-            })
-            .catch((error) => {
-                console.error("Error executing Python script:", error);
-            });
-    }
-
     // Document loaded event listener
     document
         .querySelectorAll(".navbar-documentation ul li a")
