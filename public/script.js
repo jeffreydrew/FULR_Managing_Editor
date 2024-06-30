@@ -1,4 +1,3 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
 import {
@@ -8,7 +7,12 @@ import {
     signOut,
     onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc,
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -28,70 +32,99 @@ const analytics = getAnalytics(app);
 const auth = getAuth();
 const db = getFirestore(app);
 
-// Register
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
+    // Registration
     const registerForm = document.getElementById("register-form");
     if (registerForm) {
-        registerForm.addEventListener("submit", (e) => {
+        registerForm.addEventListener("submit", async (e) => {
             e.preventDefault();
+            const name = document.getElementById("register-name").value;
             const email = document.getElementById("register-email").value;
             const password = document.getElementById("register-password").value;
 
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    console.log("User registered:", userCredential.user);
-                    window.location.href = "login.html";
-                })
-                .catch((error) => {
-                    console.error("Error registering:", error);
-                    alert(`Error registering: ${error.message}`);
+            try {
+                const userCredential = await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+                const user = userCredential.user;
+
+                // Add user to Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    name: name,
+                    email: user.email,
+                    createdAt: new Date(),
                 });
+
+                console.log("User added to Firestore:", user.uid);
+                window.location.href = "login.html";
+            } catch (error) {
+                console.error(
+                    "Error registering or adding to Firestore:",
+                    error
+                );
+                alert(
+                    `Error registering or adding to Firestore: ${error.message}`
+                );
+            }
         });
     }
 
     // Login
     const loginForm = document.getElementById("login-form");
     if (loginForm) {
-        loginForm.addEventListener("submit", (e) => {
+        loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const email = document.getElementById("login-email").value;
             const password = document.getElementById("login-password").value;
 
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    console.log("User logged in:", userCredential.user);
-                    window.location.href = "dashboard.html";
-                })
-                .catch((error) => {
-                    console.error("Error logging in:", error);
-                    alert(`Error logging in: ${error.message}`);
-                });
+            try {
+                const userCredential = await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+                console.log("User logged in:", userCredential.user);
+                window.location.href = "dashboard.html";
+            } catch (error) {
+                console.error("Error logging in:", error);
+                alert(`Error logging in: ${error.message}`);
+            }
         });
     }
 
     // Logout
     const logoutButton = document.getElementById("logout");
     if (logoutButton) {
-        logoutButton.addEventListener("click", () => {
-            signOut(auth)
-                .then(() => {
-                    window.location.href = "login.html";
-                })
-                .catch((error) => {
-                    console.error("Error logging out:", error);
-                    alert(`Error logging out: ${error.message}`);
-                });
+        logoutButton.addEventListener("click", async () => {
+            try {
+                await signOut(auth);
+                window.location.href = "login.html";
+            } catch (error) {
+                console.error("Error logging out:", error);
+                alert(`Error logging out: ${error.message}`);
+            }
         });
     }
 
-    // Redirect to dashboard if already logged in
-    onAuthStateChanged(auth, (user) => {
+    // Display user info on dashboard
+    onAuthStateChanged(auth, async (user) => {
         if (user) {
-            if (
-                window.location.pathname === "/login.html" ||
-                window.location.pathname === "/register.html"
-            ) {
-                window.location.href = "dashboard.html";
+            if (window.location.pathname === "/dashboard.html") {
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        document.getElementById(
+                            "user-info"
+                        ).innerText = `Hello, ${userData.name}`;
+                    } else {
+                        console.log("No such document!");
+                    }
+                } catch (error) {
+                    console.error("Error getting user document:", error);
+                }
             }
         } else {
             if (window.location.pathname === "/dashboard.html") {
@@ -100,68 +133,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
-
-// Save message to Firestore
-function saveMessage(name, email, message) {
-    db.collection("contacts")
-        .add({
-            name: name,
-            email: email,
-            message: message,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        })
-        .then(() => {
-            alert("Message sent successfully!");
-        })
-        .catch((error) => {
-            console.error("Error writing document:", error);
-        });
-}
-
-// Reference to the form
-const contactForm = document.getElementById("contactForm");
-
-// Listen for form submit
-if (contactForm) {
-    contactForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const name = contactForm["name"].value;
-        const email = contactForm["email"].value;
-        const message = contactForm["message"].value;
-        saveMessage(name, email, message);
-        contactForm.reset();
-    });
-}
-
-// Initialize Firebase Admin SDK (used in Firebase Functions, not here)
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
-admin.initializeApp();
-
-// Firestore trigger to send email when a new document is created
-exports.sendContactEmail = functions.firestore
-    .document("contacts/{contactId}")
-    .onCreate((snap, context) => {
-        const data = snap.data();
-        const msg = {
-            to: "jeffreydrew@ufl.edu",
-            from: "bot@fulr.bot",
-            subject: `${data.subject}`,
-            text: `Name: ${data.name}\nEmail: ${data.email}\nMessage: ${data.message}`,
-            html: `<p><strong>Name:</strong> ${data.name}</p>
-                   <p><strong>Email:</strong> ${data.email}</p>
-                   <p><strong>Message:</strong> ${data.message}</p>`,
-        };
-
-        return sgMail
-            .send(msg)
-            .then(() => {
-                console.log("Email sent successfully");
-            })
-            .catch((error) => {
-                console.error("Error sending email:", error);
-            });
-    });
 
 // Document loaded event listener
 document.addEventListener("DOMContentLoaded", function () {
