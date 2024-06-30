@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         const userData = userDoc.data();
                         document.getElementById(
                             "user-info"
-                        ).innerText = `Hello, ${userData.name}`;
+                        ).innerText = `${userData.name}`;
                     } else {
                         console.log("No such document!");
                     }
@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Document loaded event listener
 document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".navbar ul li a").forEach((anchor) => {
+    document.querySelectorAll(".navbar-documentation ul li a").forEach((anchor) => {
         anchor.addEventListener("click", function (e) {
             e.preventDefault();
             document.querySelector(this.getAttribute("href")).scrollIntoView({
