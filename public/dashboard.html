@@ -318,6 +318,56 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12" style="margin-top: 48px">
+                    <div class="card my-4">
+                        <div
+                            class="card-header p-0 position-relative mt-n4 mx-3 z-index-2"
+                        >
+                            <div
+                                class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3"
+                            >
+                                <h6 class="text-white text-capitalize ps-3">
+                                    My Writers
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="card-body px-0 pb-2">
+                            <div class="table-responsive p-0">
+                                <table
+                                    class="table align-items-center mb-0"
+                                    id="writersTable"
+                                >
+                                    <thead>
+                                        <tr>
+                                            <th
+                                            >
+                                                Name
+                                            </th>
+                                            <th
+                                            >
+                                                Email
+                                            </th>
+                                            <th
+                                            >
+                                                Proposal
+                                            </th>
+                                            <th
+                                            >
+                                                Last Checkin
+                                            </th>
+                                            <th
+                                            >
+                                                Status
+                                            </th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
 
@@ -375,14 +425,47 @@
                             let myWriters = 0;
                             let totalWriters = rows.length;
                             let papersDone = 0;
+                            const writersTableBody = document
+                                .getElementById("writersTable")
+                                .querySelector("tbody");
+
+                            // Clear the table before appending new rows
+                            writersTableBody.innerHTML = "";
 
                             rows.forEach((row) => {
-                                const editor = row[6];
-                                const status = row[9];
+                                const editor = row[6]; // Assuming the editor is in column 6
+                                const status = row[9]; // Assuming the status is in column 9
 
                                 if (editor === loggedInUser) {
                                     myWriters++;
+
+                                    // Create a new row
+                                    const newRow = document.createElement("tr");
+
+                                    // Append only columns 1, 2, 4, 8, and 9
+                                    [1, 2, 4, 8, 9].forEach((index) => {
+                                        const newCell =
+                                            document.createElement("td");
+                                        let cellContent = row[index];
+
+                                        // Truncate column 4 (index 3) to 75 characters
+                                        if (
+                                            index === 4 &&
+                                            cellContent.length > 75
+                                        ) {
+                                            cellContent =
+                                                cellContent.substring(0, 75) +
+                                                "...";
+                                        }
+
+                                        newCell.textContent = cellContent;
+                                        newRow.appendChild(newCell);
+                                    });
+
+                                    // Append the row to the table body
+                                    writersTableBody.appendChild(newRow);
                                 }
+
                                 if (
                                     status &&
                                     status.toLowerCase() === "complete"
