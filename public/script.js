@@ -2,10 +2,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
 import {
     getAuth,
+    signOut,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
     getFirestore,
@@ -32,7 +31,34 @@ const analytics = getAnalytics(app);
 const auth = getAuth();
 const db = getFirestore(app);
 
-document.addEventListener("DOMContentLoaded", () => {
+// Helper functions to manage cookies
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === " ") c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0)
+            return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+function eraseCookie(name) {
+    document.cookie = name + "=; Max-Age=-99999999;";
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
     // Registration
     const registerForm = document.getElementById("register-form");
     if (registerForm) {
@@ -85,7 +111,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     email,
                     password
                 );
-                console.log("User logged in:", userCredential.user);
+                const user = userCredential.user;
+
+                // Store user information in a cookie
+                setCookie(
+                    "user",
+                    JSON.stringify({ uid: user.uid, email: user.email }),
+                    1
+                );
+
+                console.log("User logged in:", user);
                 window.location.href = "dashboard.html";
             } catch (error) {
                 console.error("Error logging in:", error);
@@ -100,6 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
         logoutButton.addEventListener("click", async () => {
             try {
                 await signOut(auth);
+                eraseCookie("user");
                 window.location.href = "login.html";
             } catch (error) {
                 console.error("Error logging out:", error);
@@ -109,41 +145,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Display user info on dashboard
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            if (window.location.pathname === "/dashboard.html") {
-                try {
-                    const userDoc = await getDoc(doc(db, "users", user.uid));
-                    if (userDoc.exists()) {
-                        const userData = userDoc.data();
-                        document.getElementById(
-                            "user-info"
-                        ).innerText = `${userData.name}`;
-                    } else {
-                        console.log("No such document!");
-                    }
-                } catch (error) {
-                    console.error("Error getting user document:", error);
+    if (window.location.pathname === "/dashboard.html") {
+        const userCookie = getCookie("user");
+        if (userCookie) {
+            const userData = JSON.parse(userCookie);
+            try {
+                const userDoc = await getDoc(doc(db, "users", userData.uid));
+                if (userDoc.exists()) {
+                    const userInfo = userDoc.data();
+                    document.getElementById(
+                        "user-info"
+                    ).innerText = `${userInfo.name}`;
+
+                    // Dispatch a custom event indicating that user info is updated
+                    const event = new CustomEvent("userInfoUpdated", {
+                        detail: userInfo.name,
+                    });
+                    document.dispatchEvent(event);
+                } else {
+                    console.log("No such document!");
                 }
+            } catch (error) {
+                console.error("Error getting user document:", error);
             }
         } else {
-            if (window.location.pathname === "/dashboard.html") {
-                window.location.href = "login.html";
-            }
+            window.location.href = "login.html";
         }
-    });
-});
-
-// Document loaded event listener
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".navbar-documentation ul li a").forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute("href")).scrollIntoView({
-                behavior: "smooth",
+    }
+    // Document loaded event listener
+    document
+        .querySelectorAll(".navbar-documentation ul li a")
+        .forEach((anchor) => {
+            anchor.addEventListener("click", function (e) {
+                e.preventDefault();
+                document
+                    .querySelector(this.getAttribute("href"))
+                    .scrollIntoView({
+                        behavior: "smooth",
+                    });
             });
         });
-    });
 
     document.querySelectorAll(".copy-button").forEach((button) => {
         button.addEventListener("click", function () {
