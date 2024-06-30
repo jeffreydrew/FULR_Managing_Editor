@@ -26,7 +26,7 @@
             href="../assets/img/apple-icon.png"
         />
         <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
-        <title>Log In</title>
+        <title>Register</title>
         <!--     Fonts and icons     -->
         <link
             rel="stylesheet"
@@ -46,6 +46,12 @@
             href="https://fonts.googleapis.com/icon?family=Material+Icons+Round"
             rel="stylesheet"
         />
+                <link
+            href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700&display=swap"
+            rel="stylesheet"
+        />
+
+
         <!-- CSS Files -->
         <link
             id="pagestyle"
@@ -54,113 +60,190 @@
         />
         <!-- Nepcha Analytics (nepcha.com) -->
         <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
-        <script
-            defer
-            data-site="YOUR_DOMAIN_HERE"
-            src="https://api.nepcha.com/js/nepcha-analytics.js"
-        ></script>
         <script type="module" src="script.js"></script>
+        <link id="theme-style" rel="stylesheet" href="assets/css/theme.css" />
     </head>
 
-    <body class="bg-gray-200">
-        <div class="container position-sticky z-index-sticky top-0">
-            <div class="row">
-                <div class="col-12">
-  
+    <body class="">
+        <header class="header fixed-top">
+            <div class="branding docs-branding">
+                <div class="container-fluid position-relative py-2">
+                    <div class="docs-logo-wrapper">
+                        <button
+                            id="docs-sidebar-toggler"
+                            class="docs-sidebar-toggler docs-sidebar-visible me-2 d-xl-none"
+                            type="button"
+                        >
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                        <div class="site-logo">
+                            <a class="navbar-brand" href="index.html"
+                                ><img
+                                    class="logo-icon me-2"
+                                    src="favicon.png"
+                                    alt="logo"
+                                    style="width: 7%"
+                                    ;
+                                /><span class="logo-text"
+                                    >FULR<span class="text-alt"
+                                        >.Bot</span
+                                    ></span
+                                ></a
+                            >
+                        </div>
+                    </div>
+                    <!--//docs-logo-wrapper-->
+                    <div
+                        class="docs-top-utilities d-flex justify-content-end align-items-center"
+                    >
+                        <ul
+                            class="social-list list-inline mx-md-3 mx-lg-5 mb-0 d-none d-lg-flex"
+                        >
+                            <li class="list-inline-item">
+                                <a href="#"
+                                    ><i class="fab fa-github fa-fw"></i
+                                ></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#"
+                                    ><i class="fab fa-twitter fa-fw"></i
+                                ></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#"
+                                    ><i class="fab fa-slack fa-fw"></i
+                                ></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#"
+                                    ><i class="fab fa-product-hunt fa-fw"></i
+                                ></a>
+                            </li>
+                        </ul>
+                        <!--//social-list-->
+                        <a
+                            href="/login.html"
+                            class="btn btn-primary d-none d-lg-flex"
+                            >Login</a
+                        >
+                    </div>
+                    <!--//docs-top-utilities-->
                 </div>
+                <!--//container-->
             </div>
-        </div>
+            <!--//branding-->
+        </header>
+
         <main class="main-content mt-0">
-            <div
-                class="page-header align-items-start min-vh-100"
-                style="
-                    background-image: url('https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80');
-                "
-            >
-                <span class="mask bg-gradient-dark opacity-6"></span>
-                <div class="container my-auto">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-8 col-12 mx-auto">
-                            <div class="card z-index-0 fadeIn3 fadeInBottom">
+            <section>
+                <div class="page-header min-vh-100">
+                    <div class="container">
+                        <div class="row">
+                            <div
+                                class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 start-0 text-center justify-content-center flex-column"
+                            >
                                 <div
-                                    class="card-header p-0 position-relative mt-n4 mx-3 z-index-2"
+                                    class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center"
+                                    style="
+                                        background-image: url('assets/images/fulr.png');
+                                        background-size: cover;
+                                        background-color: rgba(
+                                            255,
+                                            255,
+                                            255,
+                                            0.75
+                                        );
+                                        box-shadow: 0 0 64px 64px
+                                            rgba(255, 255, 255, 0.75);
+                                    "
+                                ></div>
+                            </div>
+                            <div
+                                class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5"
+                            >
+                                <div
+                                    class="card z-index-0 fadeIn3 fadeInBottom"
                                 >
                                     <div
-                                        class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1"
-                                    >
-                                        <h4
-                                            class="text-white font-weight-bolder text-center mt-2 mb-3"
-                                        >
-                                            Log In
-                                        </h4>
-                              
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <form
-                                        role="form"
-                                        class="text-start"
-                                        id="login-form"
+                                        class="card-header p-0 position-relative mt-n4 mx-3 z-index-2"
                                     >
                                         <div
-                                            class="input-group input-group-outline my-3"
+                                            class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1"
                                         >
-                                            <input
-                                                type="email"
-                                                id="login-email"
-                                                placeholder="Email"
-                                                class="form-control"
-                                            />
-                                        </div>
-                                        <div
-                                            class="input-group input-group-outline mb-3"
-                                        >
-                                            <input
-                                                type="password"
-                                                id="login-password"
-                                                placeholder="Password"
-                                                class="form-control"
-                                            />
-                                        </div>
-                                        <div
-                                            class="form-check form-switch d-flex align-items-center mb-3"
-                                        >
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                id="rememberMe"
-                                                checked
-                                            />
-                                            <label
-                                                class="form-check-label mb-0 ms-3"
-                                                for="rememberMe"
-                                                >Remember me</label
-                                            >
-                                        </div>
-                                        <div class="text-center">
-                                            <button
-                                                type="submit"
-                                                class="btn bg-gradient-primary w-100 my-4 mb-2"
+                                            <h4
+                                                class="text-white font-weight-bolder text-center mt-2 mb-3"
                                             >
                                                 Log In
-                                            </button>
+                                            </h4>
                                         </div>
-                                        <p class="mt-4 text-sm text-center">
-                                            Don't have an account?
-                                            <a
-                                                href="register.html"
-                                                class="text-primary text-gradient font-weight-bold"
-                                                >Register</a
+                                    </div>
+                                    <div class="card-body">
+                                        <form
+                                            role="form"
+                                            class="text-start"
+                                            id="login-form"
+                                        >
+                                            <div
+                                                class="input-group input-group-outline my-3"
                                             >
-                                        </p>
-                                    </form>
+                                                <input
+                                                    type="email"
+                                                    id="login-email"
+                                                    placeholder="Email"
+                                                    class="form-control"
+                                                />
+                                            </div>
+                                            <div
+                                                class="input-group input-group-outline mb-3"
+                                            >
+                                                <input
+                                                    type="password"
+                                                    id="login-password"
+                                                    placeholder="Password"
+                                                    class="form-control"
+                                                />
+                                            </div>
+                                            <div
+                                                class="form-check form-switch d-flex align-items-center mb-3"
+                                            >
+                                                <input
+                                                    class="form-check-input"
+                                                    type="checkbox"
+                                                    id="rememberMe"
+                                                    checked
+                                                />
+                                                <label
+                                                    class="form-check-label mb-0 ms-3"
+                                                    for="rememberMe"
+                                                    >Remember me</label
+                                                >
+                                            </div>
+                                            <div class="text-center">
+                                                <button
+                                                    type="submit"
+                                                    class="btn bg-gradient-primary w-100 my-4 mb-2"
+                                                >
+                                                    Log In
+                                                </button>
+                                            </div>
+                                            <p class="mt-4 text-sm text-center">
+                                                Don't have an account?
+                                                <a
+                                                    href="register.html"
+                                                    class="text-primary text-gradient font-weight-bold"
+                                                    >Register</a
+                                                >
+                                            </p>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-   
-            </div>
+            </section>
         </main>
         <!--   Core JS Files   -->
         <script src="../assets/js/core/popper.min.js"></script>
@@ -182,6 +265,30 @@
         <!-- Github buttons -->
         <script async defer src="https://buttons.github.io/buttons.js"></script>
         <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-        <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
+        <!-- <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script> -->
     </body>
 </html>
+<style>
+    .page-header .container .row .col-6 {
+        width: 50vw; /* Viewport width to ensure it covers half the page */
+        height: 100vh; /* Viewport height to cover the full height of the viewport */
+        background: radial-gradient(
+                circle,
+                #006400,
+                #008000,
+                #00ff00,
+                #adff2f,
+                #7cfc00
+            ),
+            repeating-radial-gradient(
+                circle,
+                rgba(255, 255, 255, 0.8) 0,
+                rgba(255, 255, 255, 1) 11px,
+                transparent 1px,
+                transparent 20px /* Adjust the spacing of the dots */
+            );
+        background-size: cover, 20px 20px; /* Adjust the size of the dot pattern */
+        background-position: center, center; /* Center the background images */
+        background-blend-mode: overlay; /* Blend the overlay layer with the background */
+    }
+</style>
