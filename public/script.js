@@ -186,7 +186,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         });
 
-    document.querySelectorAll(".copy-bubble").forEach((button) => {
+    document.querySelectorAll("copy-bubble").forEach((button) => {
         button.addEventListener("click", function () {
             const codeBlock = this.previousElementSibling;
             const textToCopy = codeBlock.innerText;
