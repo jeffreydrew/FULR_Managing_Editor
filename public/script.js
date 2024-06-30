@@ -39,53 +39,64 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const sgMail = require("@sendgrid/mail");
 
+// Register
+const registerForm = document.getElementById('register-form');
+if (registerForm) {
+    registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
 
-const signupForm = document.getElementById("signup-form");
-signupForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = document.getElementById("signup-email").value;
-    const password = document.getElementById("signup-password").value;
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                window.location.href = 'dashboard.html';
+            })
+            .catch((error) => {
+                console.error('Error registering:', error);
+            });
+    });
+}
 
-    createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            console.log("User signed up:", userCredential.user);
-        })
-        .catch((error) => {
-            console.error("Error signing up:", error);
+// Login
+const loginForm = document.getElementById('login-form');
+if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                window.location.href = 'dashboard.html';
+            })
+            .catch((error) => {
+                console.error('Error logging in:', error);
+            });
+    });
+}
+
+// Logout
+const logoutButton = document.getElementById('logout');
+if (logoutButton) {
+    logoutButton.addEventListener('click', () => {
+        signOut(auth).then(() => {
+            window.location.href = 'login.html';
+        }).catch((error) => {
+            console.error('Error logging out:', error);
         });
-});
+    });
+}
 
-const loginForm = document.getElementById("login-form");
-loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = document.getElementById("login-email").value;
-    const password = document.getElementById("login-password").value;
-
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            console.log("User logged in:", userCredential.user);
-        })
-        .catch((error) => {
-            console.error("Error logging in:", error);
-        });
-});
-
-const logoutButton = document.getElementById("logout");
-logoutButton.addEventListener("click", () => {
-    signOut(auth)
-        .then(() => {
-            console.log("User logged out");
-        })
-        .catch((error) => {
-            console.error("Error logging out:", error);
-        });
-});
-
+// Redirect to dashboard if already logged in
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        document.getElementById("dashboard").style.display = "block";
+        if (window.location.pathname === '/login.html' || window.location.pathname === '/register.html') {
+            window.location.href = 'dashboard.html';
+        }
     } else {
-        document.getElementById("dashboard").style.display = "none";
+        if (window.location.pathname === '/dashboard.html') {
+            window.location.href = 'login.html';
+        }
     }
 });
 
@@ -141,15 +152,14 @@ function saveMessage(name, email, message) {
 // Initialize Firebase Admin SDK
 admin.initializeApp();
 
-
 // Firestore trigger to send email when a new document is created
 exports.sendContactEmail = functions.firestore
-    .document('contacts/{contactId}')
+    .document("contacts/{contactId}")
     .onCreate((snap, context) => {
         const data = snap.data();
         const msg = {
-            to: 'jeffreydrew@ufl.edu',
-            from: 'bot@fulr.bot',
+            to: "jeffreydrew@ufl.edu",
+            from: "bot@fulr.bot",
             subject: `${data.subject}`,
             text: `Name: ${data.name}\nEmail: ${data.email}\nMessage: ${data.message}`,
             html: `<p><strong>Name:</strong> ${data.name}</p>
@@ -157,15 +167,15 @@ exports.sendContactEmail = functions.firestore
                    <p><strong>Message:</strong> ${data.message}</p>`,
         };
 
-        return sgMail.send(msg)
+        return sgMail
+            .send(msg)
             .then(() => {
-                console.log('Email sent successfully');
+                console.log("Email sent successfully");
             })
             .catch((error) => {
-                console.error('Error sending email:', error);
+                console.error("Error sending email:", error);
             });
     });
-
 
 //DOCUMENT LOADED---------------------------------------------------
 document.addEventListener("DOMContentLoaded", function () {
