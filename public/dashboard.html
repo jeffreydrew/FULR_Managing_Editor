@@ -297,6 +297,45 @@
                         </div>
                     </div>
                 </div>
+                <div class="row" style="margin-top: 24px">
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-header p-3">
+                                <h4 class="mb-0">Drag and Drop Area</h4>
+                            </div>
+                            <div class="card-body">
+                                <div
+                                    id="drop-area"
+                                    style="
+                                        border: 2px dashed #ccc;
+                                        padding: 20px;
+                                        text-align: center;
+                                    "
+                                >
+                                    <p>Drag & Drop files here</p>
+                                    <input
+                                        type="file"
+                                        id="fileElem"
+                                        multiple
+                                        accept="*"
+                                        style="display: none"
+                                        onchange="handleFiles(this.files)"
+                                    />
+                                    <label class="button-drop" for="fileElem"
+                                        >Select some files</label
+                                    >
+                                </div>
+                                <progress
+                                    id="progress-bar"
+                                    max="100"
+                                    value="0"
+                                    style="width: 100%; display: none"
+                                ></progress>
+                                <div id="uploads"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
         <style>
@@ -305,6 +344,29 @@
                 font-size: larger;
                 max-width: 100%;
                 overflow-wrap: break-word;
+            }
+            #drop-area {
+                border: 2px dashed #ccc;
+                border-radius: 20px;
+                width: 100%;
+                max-width: 600px;
+                margin: 50px auto;
+                padding: 20px;
+                text-align: center;
+            }
+            #drop-area.highlight {
+                border-color: purple;
+            }
+            .button-drop {
+                display: inline-block;
+                padding: 10px 20px;
+                margin: 10px;
+                font-size: 16px;
+                cursor: pointer;
+                color: white;
+                background-color: purple;
+                border: none;
+                border-radius: 5px;
             }
         </style>
 
