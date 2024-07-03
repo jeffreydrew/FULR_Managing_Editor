@@ -1,6 +1,23 @@
-PropertiesService.getScriptProperties().setProperty('EDEN_API_KEY', 'YOUR_EDEN_API_KEY');
+PropertiesService.getScriptProperties().setProperty('EDEN_API_KEY', 'YOUR_KEY');
 
-PropertiesService.getScriptProperties().setProperty('SLACK_BOT_TOKEN', 'YOUR_SLACK_BOT_TOKEN');
+PropertiesService.getScriptProperties().setProperty('SLACK_BOT_TOKEN', 'YOUR_KEY');
+
+PropertiesService.getScriptProperties().setProperty('COURTLISTENER_API_KEY', 'YOUR_KEY');
+
+PropertiesService.getScriptProperties().setProperty('COURTLISTENER_API_URL', 'https://www.courtlistener.com/api/rest/v3/search/');
+
+function incrementSlashCommandCount() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('Sheet1');
+  var range = sheet.getRange('M2');
+  var currentValue = range.getValue();
+  
+  if (!currentValue || isNaN(currentValue)) {
+    currentValue = 0;
+  }
+  
+  range.setValue(currentValue + 1);
+}
 
 function doPost(e) {
   var responseUrl;
@@ -47,6 +64,7 @@ function doPost(e) {
       // Log the extracted parameters
       Logger.log("Command: " + command);
       Logger.log("Text: " + text);
+      incrementSlashCommandCount()
 
       // Acknowledge the command immediately to prevent timeout
       UrlFetchApp.fetch(responseUrl, {
@@ -58,7 +76,7 @@ function doPost(e) {
       // Handle the command using a switch statement
       switch (command) {
         case "/add-editor":
-          handleAddEditorCommand(text, responseUrl);
+          handleAddEditorCommand(text, responseUrl, payload, invokingUser);
           break;
         case "/writers-for":
           handleGetWritersCommand(text, responseUrl);
@@ -85,7 +103,7 @@ function doPost(e) {
           handleCaselawCommand(text, responseUrl, payload, invokingUser);
           break;
         case "/update-status":
-          handleUpdateStatusCommand(text, responseUrl);
+          handleUpdateStatusCommand(text, responseUrl, payload, invokingUser);
           break;
         case "/get-status":
           handleGetStatusCommand(text, responseUrl);
@@ -142,15 +160,18 @@ function handleHelpCommand(responseUrl) {
       1. /add-editor name: editor - Assign an editor to a writer.
       2. /writers-for editor - List all writers assigned to a specific editor.
       3. /editor-for writer - Get the editor assigned to a specific writer.
-      4. /add-completion-date name date - Add a completion date for a writer.
+      4. /add-completion - date name date - Add a completion date for a writer.
       5. /meet username date - Send a meeting request to a user.
       6. /need-checkin - List users needing check-in.
       7. /brief-me writer - Get a brief summary of the latest proposal for a writer.
       8. /guide prompt - Create a timeline for a paper.
       9. /caselaw prompt - Provide links to legal resources.
-      10. /help - List all available commands.
-      Full Documentation available at: 
-      https://jeffreydrew.github.io/FULR_Managing_Editor/
+      10. /update-status - Update the status of a writer (is shared with channel).
+      11. /get-status - Get the status of a writer.
+      12. /list-writers - List all writers (and status) by editor
+      13. /help - List all available commands.
+  Full Documentation available at: 
+  https://jeffreydrew.github.io/FULR_Managing_Editor/
       `;
 
     // Respond with the help message
@@ -161,7 +182,7 @@ function handleHelpCommand(responseUrl) {
   }
 }
 
-function handleAddEditorCommand(text, responseUrl) {
+function handleAddEditorCommand(text, responseUrl, payload, invokingUser) {
   try {
     // Parse the message for the name format "name: name"
     var nameParts = text.split(':');
@@ -205,7 +226,11 @@ function handleAddEditorCommand(text, responseUrl) {
     sheet.getRange(rowIndex, editorColumnIndex + 1).setValue(editorName);
 
     // Respond in the same Slack channel
-    postToSlack(responseUrl, `Editor added for ${fullName}: ${editorName}`);
+    postMessageToChannel(payload.channel_id, `*${editorName}* (editor) has been assigned to *${fullName}* (writer)`);
+    
+    // Send a private message to the editor
+    sendPrivateMessage(editorName, `You have been assigned as the editor for *${fullName}* (writer)`);
+
   } catch (error) {
     Logger.log("Error in handleAddEditorCommand: " + error.message);
     postToSlack(responseUrl, "Error: " + error.message);
@@ -451,7 +476,7 @@ function handleBriefMeCommand(writerName, responseUrl, payload, invokingUser) {
 
     // Respond in the same Slack channel
     // postToSlack(responseUrl, `Brief for ${writerName}'s latest proposal: ${summary}`);
-    postMessageToChannel(payload.channel_id, `${invokingUser} requested a brief for ${writerName}'s latest proposal, here's what I can provide: ${summary}`)
+    postMessageToChannel(payload.channel_id, `${invokingUser} requested a brief for *${writerName}*'s latest proposal, here's what I can provide: \n${summary}`)
   } catch (error) {
     Logger.log("Error in handleBriefMeCommand: " + error.message);
     postToSlack(responseUrl, "Error: " + error.message);
@@ -525,12 +550,22 @@ function handleCaselawCommand(writerName, responseUrl, payload, invokingUser) {
       throw new Error("No proposal found for writer '" + writerName + "'.");
     }
 
-    // Use Eden AI to get a summary of the proposal
+    // Use Eden AI to get a list of key words and phrases from the proposal
     var summary = getSummaryFromEdenAI(latestProposal, "caselaw");
+    var cases = searchCasesByKeywords(summary)
+    let output = "";
+    cases.forEach(caseItem => {
+        output += `Case Name: ${caseItem.caseName}\n`;
+        output += `Ruling Date: ${caseItem.rulingDate}\n`;
+        output += `Court: ${caseItem.court}\n`;
+        output += `Snippet: ${caseItem.snippet}\n`;
+        output += '-------------------------------------\n';
+    });
+
 
     // Respond in the same Slack channel
-    // postToSlack(responseUrl, `Legal resources for ${writerName}'s latest proposal: ${summary}`);
-    postMessageToChannel(payload.channel_id, `${invokingUser} requested a list of legal resources for ${writerName}'s latest proposal: ${summary}`)
+    postToSlack(responseUrl, `${invokingUser} requested a list of legal resources for *${writerName}*'s latest proposal: \n${output}`);
+    // postMessageToChannel(payload.channel_id, `${invokingUser} requested a list of legal resources for ${writerName}'s latest proposal: ${summary}`)
 
   } catch (error) {
     Logger.log("Error in handleBriefMeCommand: " + error.message);
@@ -538,7 +573,7 @@ function handleCaselawCommand(writerName, responseUrl, payload, invokingUser) {
   }
 }
 
-function handleUpdateStatusCommand(text, responseUrl) {
+function handleUpdateStatusCommand(text, responseUrl, payload, invokingUser) {
   try {
     // Parse the message for the format "writer: status"
     var nameStatusParts = text.split(':');
@@ -582,7 +617,7 @@ function handleUpdateStatusCommand(text, responseUrl) {
     sheet.getRange(rowIndex, statusColumnIndex + 1).setValue(status);
 
     // Respond in the same Slack channel
-    postToSlack(responseUrl, `Status updated for ${writerName}: ${status}`);
+    postMessageToChannel(payload.channel_id, `Status updated for *${writerName}*: ${status}`);
 
     return ContentService.createTextOutput("Status updated");
   } catch (error) {
@@ -620,7 +655,7 @@ function handleGetStatusCommand(writerName, responseUrl) {
     }
 
     // Respond in the same Slack channel
-    postToSlack(responseUrl, `Status for ${writerName}: ${status}`);
+    postToSlack(responseUrl, `Status for *${writerName}*: ${status}`);
 
     return ContentService.createTextOutput("Status retrieved");
   } catch (error) {
@@ -640,27 +675,29 @@ function handleListWritersCommand(responseUrl) {
     var values = range.getValues();
     var writerColumnIndex = values[0].indexOf("Full Name");
     var editorColumnIndex = values[0].indexOf("Editor");
+    var statusColumnIndex = values[0].indexOf("Status");
 
-    if (writerColumnIndex === -1 || editorColumnIndex === -1) {
-      throw new Error("Columns 'Full Name' and 'Editor' must exist in the sheet.");
+    if (writerColumnIndex === -1 || editorColumnIndex === -1 || statusColumnIndex === -1) {
+      throw new Error("Columns 'Full Name', 'Editor', and 'Status' must exist in the sheet.");
     }
 
     var editors = {};
     for (var i = 1; i < values.length; i++) {
       var editor = values[i][editorColumnIndex];
       var writer = values[i][writerColumnIndex];
+      var status = values[i][statusColumnIndex];
       if (editor in editors) {
-        editors[editor].push(writer);
+        editors[editor].push({writer: writer, status: status});
       } else {
-        editors[editor] = [writer];
+        editors[editor] = [{writer: writer, status: status}];
       }
     }
 
-    var message = "Editors and their writers:\n";
+    var message = "All editors and writers:\n";
     for (var editor in editors) {
       message += `*${editor}*\n`;
-      editors[editor].forEach(writer => {
-        message += `  - ${writer}\n`;
+      editors[editor].forEach(writerStatus => {
+        message += `  - ${writerStatus.writer} (Status: ${writerStatus.status})\n`;
       });
     }
 
@@ -676,8 +713,43 @@ function handleListWritersCommand(responseUrl) {
 }
 
 
-
 //HELPERS
+
+function searchCasesByKeywords(keywords) {
+    var courtlistener_api = PropertiesService.getScriptProperties().getProperty('COURTLISTENER_API_KEY');
+    var courtlistener_url = PropertiesService.getScriptProperties().getProperty('COURTLISTENER_API_URL');
+
+    const keywordsList = keywords.split(",").map(item => item.trim());
+
+
+    const query = keywordsList.map(keyword => `q=${encodeURIComponent(keyword)}`).join("&");
+    const searchUrl = `${courtlistener_url}?${query}`;
+
+    try {
+        const response = UrlFetchApp.fetch(searchUrl, {
+            method: "get",
+            headers: {
+                Authorization: `Token ${courtlistener_api}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (response.getResponseCode() !== 200) {
+            throw new Error(`HTTP error! Status: ${response.getResponseCode()}`);
+        }
+
+        const data = JSON.parse(response.getContentText());
+        const cases = data.results.map((caseItem) => ({
+            caseName: caseItem.caseName,
+            rulingDate: caseItem.dateFiled,
+            court: caseItem.court,
+            snippet: caseItem.snippet
+        }));
+        return cases;
+    } catch (error) {
+        Logger.log("Error: " + error.message);
+    }
+}
 
 function getSummaryFromEdenAI(proposal, mode) {
   var edenApiKey = PropertiesService.getScriptProperties().getProperty('EDEN_API_KEY');
@@ -691,7 +763,7 @@ function getSummaryFromEdenAI(proposal, mode) {
       prompt = "Create a timeline of completion within the next month for a 1500 word paper with the following prompt: ";
       break;
     case "caselaw":
-      prompt = "Provide me with links to legal resources about the following prompt: ";
+      prompt = "Extract a short list of key words and phrases, comma delimited, about the following prompt: ";
       break;
     case "chat":
       prompt = ""
