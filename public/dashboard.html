@@ -77,6 +77,56 @@
                     right: 20px;
                 }
             }
+            .card-drop {
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                background-color: #fff;
+                width: 100%;
+                max-width: 500px;
+                text-align: center;
+            }
+            .card h3 {
+                margin-bottom: 20px;
+                font-size: 1.5em;
+            }
+            .drag-drop-area {
+                border: 2px dashed #007bff;
+                border-radius: 4px;
+                padding: 20px;
+                cursor: pointer;
+                transition: background-color 0.2s, border-color 0.2s;
+            }
+            .drag-drop-area.dragover {
+                background-color: #e9f5ff;
+                border-color: #0056b3;
+            }
+            .drag-drop-area input[type="file"] {
+                display: none;
+            }
+            .drag-drop-area p {
+                margin: 0;
+                font-size: 1.1em;
+                color: #007bff;
+            }
+            .form-group {
+                margin-top: 20px;
+            }
+            .form-group button {
+                display: block;
+                width: 100%;
+                padding: 10px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 1em;
+            }
+            .form-group button:hover {
+                background-color: #0056b3;
+            }
         </style>
     </head>
 
@@ -339,33 +389,45 @@
                                 >
                                     <thead>
                                         <tr>
-                                            <th
-                                            >
-                                                Name
-                                            </th>
-                                            <th
-                                            >
-                                                Email
-                                            </th>
-                                            <th
-                                            >
-                                                Proposal
-                                            </th>
-                                            <th
-                                            >
-                                                Last Checkin
-                                            </th>
-                                            <th
-                                            >
-                                                Status
-                                            </th>
-                                           
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Proposal</th>
+                                            <th>Last Checkin</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
                                 </table>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="col-12" style="margin-top: 48px; justify-content: center;">
+                    <div class="card-drop my-4">
+                        <h3>Upload and Convert File</h3>
+                        <form id="uploadForm">
+                            <div class="drag-drop-area" id="dragDropArea">
+                                <input
+                                    type="file"
+                                    id="fileInput"
+                                    name="file"
+                                    accept=".txt"
+                                />
+                                <p>
+                                    Drag & Drop your file here or click to
+                                    select
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <button
+                                    type="button"
+                                    id="convertButton"
+                                    style="display: none"
+                                >
+                                    Convert
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -495,6 +557,58 @@
                     console.log("Logged in user:", loggedInUser);
                     fetchSheetData();
                 });
+            });
+        </script>
+        <script src="converter.js"></script>
+        <script>
+            const dragDropArea = document.getElementById("dragDropArea");
+            const fileInput = document.getElementById("fileInput");
+            const convertButton = document.getElementById("convertButton");
+            let selectedFile;
+
+            dragDropArea.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                dragDropArea.classList.add("dragover");
+            });
+
+            dragDropArea.addEventListener("dragleave", () => {
+                dragDropArea.classList.remove("dragover");
+            });
+
+            dragDropArea.addEventListener("drop", (e) => {
+                e.preventDefault();
+                dragDropArea.classList.remove("dragover");
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    selectedFile = files[0];
+                    convertButton.style.display = "block";
+                }
+            });
+
+            dragDropArea.addEventListener("click", () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener("change", () => {
+                if (fileInput.files.length > 0) {
+                    selectedFile = fileInput.files[0];
+                    convertButton.style.display = "block";
+                }
+            });
+
+            convertButton.addEventListener("click", () => {
+                if (selectedFile) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const text = e.target.result;
+                        convertTextToLatexAndPDF(
+                            text,
+                            selectedFile.name.replace(".txt", ".pdf")
+                        );
+                    };
+                    reader.readAsText(selectedFile);
+                }
             });
         </script>
     </body>
